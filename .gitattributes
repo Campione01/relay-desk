@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.ico binary
+# Terminal captures replay byte for byte: the terminal model treats CR and LF differently.
+*.ansi -text
+tests/engine/fixtures/native-panel/*.txt -text

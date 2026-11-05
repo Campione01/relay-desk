@@ -1,0 +1,293 @@
+/* Design tokens. Light is the default; dark is applied via
+   data-theme="dark" on <html>, which theme/theme.ts resolves from the setting and prefers-color-scheme. */
+:root {
+  color-scheme: light;
+
+  /* Surfaces (§1.1) */
+  /* Light values marked (L) are sampled from the lossless desktop capture
+     of the usage popover (PNG); WebP screenshots tint near-whites by a unit or two. */
+  --rd-bg-app: #fcfcfb; /* (L) window, title bar, transcript, right panel */
+  --rd-bg-sidebar: #fbfbf9; /* (L) pinned sidebar is a shade warmer than the window */
+  --rd-bg-card: transparent;
+  --rd-bg-input: #ffffff; /* (L) prompt box */
+  --rd-bg-search: #fdfdfc; /* (L) sidebar search field */
+  --rd-bg-elevated: #ffffff; /* (L) popovers */
+  --rd-bg-inset: #f5f5f4;
+  --rd-bg-hover: #f3f3f3;
+  --rd-bg-active: #f0efec; /* (L) selected sidebar row */
+  --rd-bg-pressed: #e3e3e3;
+  --rd-bg-pressed-soft: #f2f2f2;
+  --rd-bg-segment-track: #efefed; /* (L) chat/code toggle track */
+  --rd-bg-meter-track: #f3f3f3; /* (L) usage bars */
+  --rd-meter-high: #d03b3b; /* (L) usage bar at the limit */
+  --rd-meter-track-edge: #e8e8e8; /* (L) 1 px rim of the usage bar track */
+  --rd-warning-glyph: #6f4300; /* (L) limit mark after the effort label */
+  --rd-bg-segment-thumb: #ffffff;
+  --rd-bg-user-bubble: #f0f0ef;
+  --rd-bg-tooltip: #0a0a0a;
+  --rd-tooltip-edge: transparent;
+  --rd-bg-badge: #f2f2f2;
+  --rd-bg-avatar: #e7e7e7;
+  --rd-bg-new-circle: #e9e9e7;
+  --rd-bg-backdrop: rgba(20, 20, 20, 0.28);
+  /* Image viewer (desktop-light-08, both themes): near-black veil, light grey caption, white active arrow. */
+  --rd-viewer-veil: rgba(10, 10, 10, 0.92);
+  --rd-viewer-fg: #cfcfcf;
+  --rd-viewer-fg-strong: #ffffff;
+  --rd-viewer-fg-off: #5a5a5a;
+  --rd-viewer-hover: rgba(255, 255, 255, 0.1);
+
+  /* Borders (§1.2) */
+  --rd-border: #e4e4e3; /* (L) right-panel cards, file cards */
+  --rd-border-subtle: #efefef;
+  --rd-border-strong: #d6d6d6;
+  --rd-border-input: #e1e1e0; /* (L) prompt box */
+  --rd-border-search: #e5e5e4; /* (L) */
+  --rd-border-sidebar: #e2e2e1; /* (L) */
+  --rd-divider-titlebar: #e7e7e7;
+  --rd-connector-line: #cfcfcf;
+
+  /* Text and icons (§1.3) */
+  --rd-text-primary: #0b0b0b; /* (L) */
+  --rd-text-secondary: #52514e; /* (L) */
+  --rd-text-muted: #898781; /* (L) group labels, hints */
+  --rd-text-faint: #9a9a98;
+  --rd-text-disabled: #b5b5b3;
+  --rd-icon: #2b2b2b;
+  --rd-icon-muted: #5e5e5c;
+  --rd-text-on-tooltip: #ffffff;
+  --rd-text-on-tooltip-muted: #8c8c8c;
+  --rd-text-badge: #6c6c6a;
+
+  /* Accent and status (§1.4) */
+  --rd-accent: #a64a2b; /* 4.5:1 or more on every surface of the theme */
+  --rd-danger-text: #8f2d2a;
+  --rd-danger-bg: #fbe9ec;
+  --rd-code-inline-fg: #8e2626; /* (L) */
+  --rd-code-inline-bg: #f0f0ef; /* (L) */
+  --rd-code-inline-edge: rgba(0, 0, 0, 0.06);
+  --rd-diff-add-fg: #2f8f4f;
+  --rd-diff-add-bg: #d3ebd8;
+  --rd-diff-del-fg: #b0405f;
+  --rd-diff-del-bg: #f5d1da;
+  --rd-diff-line-add-bg: #e6f4ea;
+  --rd-diff-line-del-bg: #fbe9ec;
+  --rd-diff-lineno-add: #2f8f4f;
+  --rd-diff-lineno-del: #b0405f;
+  --rd-info: #2a78d6;
+  --rd-success: #2f8f4f;
+  --rd-focus-ring: #5a86b4;
+  --rd-focus-halo: rgba(80, 150, 235, 0.18);
+  --rd-toggle-off-track: #cccccc;
+  --rd-toggle-on-track: #2a78d6;
+  --rd-toggle-knob: #ffffff;
+  --rd-toggle-knob-edge: #d7d7d7;
+  --rd-usage-ring: #2a78d6;
+  --rd-usage-ring-high: #bf4446;
+  --rd-status-dot: #868581;
+  --rd-warning-dot: #d9a400;
+  --rd-warning-badge-bg: #fbf1d0;
+  --rd-warning-badge-fg: #7a5c0c;
+  --rd-btn-primary-bg: #141414;
+  --rd-btn-primary-fg: #ffffff;
+  --rd-btn-secondary-bg: #f0f0ef;
+  --rd-btn-secondary-fg: #141414;
+  --rd-btn-disabled-bg: #f3f3f3;
+  --rd-btn-disabled-fg: #b5b5b3;
+  --rd-btn-danger-bg: #8f2d2a;
+  --rd-btn-danger-fg: #ffffff;
+  --rd-scroll-thumb: #adadad;
+
+  /* Take-over banner (§6.4) */
+  --rd-banner-bg: #fdf6e3;
+  --rd-banner-border: #efdfb0;
+  --rd-banner-fg: #7a5c0c;
+  --rd-banner-icon: #d9a400;
+
+  /* Context legend (§1.5) */
+  --rd-legend-blue: #2a78d6;
+  --rd-legend-orange: #e96a35;
+  --rd-legend-green: #1bae7d;
+  --rd-legend-gray: #878883;
+  --rd-legend-light: #c1c3b7;
+  --rd-legend-free: #eaeae8;
+
+  /* Syntax colours for code blocks (kept subdued, §4.7) */
+  --rd-syntax-keyword: #8a3ffc;
+  --rd-syntax-string: #2f7d4f;
+  --rd-syntax-number: #b4561c;
+  --rd-syntax-comment: #8a8a86;
+  --rd-syntax-title: #2a62b4;
+  --rd-syntax-attr: #8f5a1c;
+  --rd-syntax-meta: #6c6c6a;
+
+  /* Shadows (§3.1) */
+  --rd-shadow-input: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --rd-shadow-popover: 0 0 0 1px var(--rd-border-strong), 0 4px 16px rgba(0, 0, 0, 0.08);
+  --rd-shadow-peek: 4px 0 28px rgba(0, 0, 0, 0.07);
+  --rd-shadow-dialog: 0 0 0 1px var(--rd-border-strong), 0 12px 40px rgba(0, 0, 0, 0.14);
+
+  /* Shape (§3.1) */
+  --rd-r-2: 2px;
+  --rd-r-4: 4px;
+  --rd-r-6: 6px;
+  --rd-r-7: 7px;
+  --rd-r-8: 8px;
+  --rd-r-10: 10px;
+  --rd-r-12: 12px;
+  --rd-r-14: 14px;
+
+  /* Typography (§2): no proprietary fonts are bundled; Latin families first, CJK after, generics last. */
+  --rd-font-sans: "DM Sans Variable", "Segoe UI Variable Text", "Segoe UI", "Microsoft JhengHei UI",
+    "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", "Microsoft YaHei UI", system-ui, sans-serif;
+  --rd-font-mono: "JetBrains Mono Variable", "Cascadia Mono", Consolas, ui-monospace, "Microsoft JhengHei UI", monospace;
+  --rd-font-scale: 1;
+  --rd-fs-11: calc(11px * var(--rd-font-scale));
+  --rd-fs-12: calc(12px * var(--rd-font-scale));
+  --rd-fs-13: calc(13px * var(--rd-font-scale));
+  --rd-fs-14: calc(14px * var(--rd-font-scale));
+  --rd-fs-20: calc(20px * var(--rd-font-scale));
+  --rd-lh-14: calc(14px * var(--rd-font-scale));
+  --rd-lh-16: calc(16px * var(--rd-font-scale));
+  --rd-lh-18: calc(18px * var(--rd-font-scale));
+  --rd-lh-20: calc(20px * var(--rd-font-scale));
+  --rd-lh-28: calc(28px * var(--rd-font-scale));
+
+  /* Layout metrics (§3.2) */
+  --rd-titlebar-h: 36px;
+  --rd-sidebar-w: 214px;
+  --rd-column-w: 768px;
+  --rd-panel-w: 300px;
+  --rd-panel-card-w: 277px;
+  --rd-scrollbar-w: 10px;
+  /* Room for the native caption buttons (Electron titleBarOverlay). In a plain browser the env()
+     values are missing and the fallback keeps the same 3 x 46 px reserve. */
+  --rd-caption-reserve: max(
+    0px,
+    calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, calc(100vw - 138px)))
+  );
+
+  /* Motion (§5) */
+  --rd-ease: cubic-bezier(0.2, 0, 0, 1);
+  --rd-ease-spin: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --rd-bg-app: #1f1f1f;
+  --rd-bg-sidebar: #262626;
+  --rd-bg-card: #262626;
+  --rd-bg-input: #2c2c2c;
+  --rd-bg-search: #2c2c2c;
+  --rd-bg-elevated: #2c2c2c;
+  --rd-bg-meter-track: #333333;
+  --rd-meter-high: #e0605f;
+  --rd-meter-track-edge: #3a3a3a;
+  --rd-warning-glyph: #f4d368;
+  --rd-border-sidebar: #333333;
+  --rd-bg-inset: #2f2f2f;
+  --rd-bg-hover: #333333;
+  --rd-bg-active: #3d3d3d;
+  --rd-bg-pressed: #404040;
+  --rd-bg-pressed-soft: #404040;
+  --rd-bg-segment-track: #313131;
+  --rd-bg-segment-thumb: #3d3d3d;
+  --rd-bg-user-bubble: #2c2c2c;
+  --rd-bg-tooltip: #0a0a0a;
+  --rd-tooltip-edge: #3a3a3a;
+  --rd-bg-badge: #333333;
+  --rd-bg-avatar: #3a3a3a;
+  --rd-bg-new-circle: #333333;
+  --rd-bg-backdrop: rgba(0, 0, 0, 0.5);
+
+  --rd-border: #333333;
+  --rd-border-subtle: #2b2b2b;
+  --rd-border-strong: #454545;
+  --rd-border-input: #3a3a3a;
+  --rd-border-search: #363636;
+  --rd-divider-titlebar: #363636;
+  --rd-connector-line: #4a4a4a;
+
+  --rd-text-primary: #ececec;
+  --rd-text-secondary: #b0b0b0;
+  --rd-text-muted: #9e9e9e;
+  --rd-text-faint: #898989;
+  --rd-text-disabled: #6f6f6f;
+  --rd-icon: #d0d0d0;
+  --rd-icon-muted: #9e9e9e;
+  --rd-text-on-tooltip: #ffffff;
+  --rd-text-on-tooltip-muted: #8c8c8c;
+  --rd-text-badge: #b0b0b0;
+
+  --rd-accent: #e39981;
+  --rd-danger-text: #f07a72;
+  --rd-danger-bg: #3a2526;
+  --rd-code-inline-fg: #f0a19b;
+  --rd-code-inline-bg: #2f2f2f;
+  --rd-code-inline-edge: rgba(255, 255, 255, 0.05);
+  --rd-diff-add-fg: #3ac856;
+  --rd-diff-add-bg: #373737;
+  --rd-diff-del-fg: #e63057;
+  --rd-diff-del-bg: #373737;
+  --rd-diff-line-add-bg: #2d4b31;
+  --rd-diff-line-del-bg: #642c35;
+  --rd-diff-lineno-add: #49b55c;
+  --rd-diff-lineno-del: #d14164;
+  --rd-info: #4b8fe0;
+  --rd-success: #3ac856;
+  --rd-focus-ring: #1d6faa;
+  --rd-focus-halo: rgba(29, 111, 170, 0.35);
+  --rd-toggle-off-track: #4a4a4a;
+  --rd-toggle-on-track: #4b8fe0;
+  --rd-toggle-knob: #ffffff;
+  --rd-toggle-knob-edge: transparent;
+  --rd-usage-ring: #249ce5;
+  --rd-usage-ring-high: #e0605f;
+  --rd-status-dot: #9e9e9e;
+  --rd-warning-dot: #fdd020;
+  --rd-warning-badge-bg: #3a3827;
+  --rd-warning-badge-fg: #f4d368;
+  --rd-btn-primary-bg: #ffffff;
+  --rd-btn-primary-fg: #000000;
+  --rd-btn-secondary-bg: #383838;
+  --rd-btn-secondary-fg: #e8e8e8;
+  --rd-btn-disabled-bg: #2f2f2f;
+  --rd-btn-disabled-fg: #6f6f6f;
+  --rd-btn-danger-bg: #c4423f;
+  --rd-btn-danger-fg: #ffffff;
+  --rd-scroll-thumb: #5a5a5a;
+
+  --rd-banner-bg: #3a3827;
+  --rd-banner-border: #4d482c;
+  --rd-banner-fg: #f4d368;
+  --rd-banner-icon: #fdd020;
+
+  --rd-legend-blue: #4b8fe0;
+  --rd-legend-orange: #f07a45;
+  --rd-legend-green: #2cc08f;
+  --rd-legend-gray: #8a8a86;
+  --rd-legend-light: #5c5d57;
+  --rd-legend-free: #333333;
+
+  --rd-syntax-keyword: #c69cff;
+  --rd-syntax-string: #8fd19e;
+  --rd-syntax-number: #f0a674;
+  --rd-syntax-comment: #7c7c7c;
+  --rd-syntax-title: #8ab4f8;
+  --rd-syntax-attr: #e5c07b;
+  --rd-syntax-meta: #9e9e9e;
+
+  --rd-shadow-input: 0 1px 4px rgba(0, 0, 0, 0.1);
+  --rd-shadow-popover: 0 0 0 1px var(--rd-border-strong), 0 4px 16px rgba(0, 0, 0, 0.2);
+  --rd-shadow-peek: 4px 0 28px rgba(0, 0, 0, 0.175);
+  --rd-shadow-dialog: 0 0 0 1px var(--rd-border-strong), 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Before the theme script runs (first paint), follow the system so the window never flashes white. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    background: #1f1f1f;
+    color: #ececec;
+  }
+}

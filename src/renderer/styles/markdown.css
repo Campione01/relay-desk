@@ -1,0 +1,242 @@
+/* Assistant markdown (§4.3, §4.5) and subdued syntax colours. */
+.rd-md {
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.rd-md > :first-child {
+  margin-top: 0;
+}
+
+.rd-md > :last-child {
+  margin-bottom: 0;
+}
+
+.rd-md p,
+.rd-md ul,
+.rd-md ol,
+.rd-md blockquote,
+.rd-md .rd-md__code,
+.rd-md .rd-md__table,
+.rd-md hr {
+  margin: 12px 0;
+}
+
+.rd-md h1,
+.rd-md h2,
+.rd-md h3,
+.rd-md h4,
+.rd-md h5,
+.rd-md h6 {
+  margin: 16px 0 8px;
+  font-weight: 600;
+  color: var(--rd-text-primary);
+}
+
+.rd-md h1 {
+  font-size: calc(18px * var(--rd-font-scale));
+  line-height: calc(26px * var(--rd-font-scale));
+}
+
+.rd-md h2 {
+  font-size: calc(16px * var(--rd-font-scale));
+  line-height: calc(24px * var(--rd-font-scale));
+}
+
+.rd-md h3,
+.rd-md h4,
+.rd-md h5,
+.rd-md h6 {
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+}
+
+.rd-md ul,
+.rd-md ol {
+  padding-left: 22px;
+}
+
+.rd-md li + li {
+  margin-top: 4px;
+}
+
+.rd-md li > ul,
+.rd-md li > ol {
+  margin: 4px 0;
+}
+
+.rd-md li > p {
+  margin: 0;
+}
+
+.rd-md input[type="checkbox"] {
+  margin: 0 6px 0 0;
+  vertical-align: -1px;
+  accent-color: var(--rd-info);
+}
+
+.rd-md a {
+  color: var(--rd-text-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.rd-md strong {
+  font-weight: 600;
+}
+
+.rd-md blockquote {
+  padding-left: 12px;
+  border-left: 2px solid var(--rd-border-strong);
+  color: var(--rd-text-secondary);
+}
+
+.rd-md hr {
+  border: 0;
+  border-top: 1px solid var(--rd-border);
+}
+
+/* Inline code (§4.5): does not grow the 20 px line. */
+.rd-md code {
+  padding: 2px 4px;
+  border-radius: var(--rd-r-4);
+  background: var(--rd-code-inline-bg);
+  box-shadow: inset 0 0 0 0.5px var(--rd-code-inline-edge);
+  color: var(--rd-code-inline-fg);
+  font-family: var(--rd-font-mono);
+  font-size: var(--rd-fs-13);
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.rd-md__code {
+  position: relative;
+}
+
+.rd-md pre {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-inset);
+  overflow-x: auto;
+  font-family: var(--rd-font-mono);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-20);
+}
+
+.rd-md pre code {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--rd-text-primary);
+  line-height: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+.rd-md__copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  background: var(--rd-bg-inset);
+  transition: opacity 100ms ease-out;
+}
+
+.rd-md__code:hover .rd-md__copy,
+.rd-md__copy:focus-visible {
+  opacity: 1;
+}
+
+.rd-md__table {
+  overflow-x: auto;
+}
+
+.rd-md table {
+  border-collapse: collapse;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-md th,
+.rd-md td {
+  padding: 4px 10px;
+  border: 1px solid var(--rd-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.rd-md th {
+  font-weight: 600;
+  background: var(--rd-bg-inset);
+}
+
+.hljs-keyword,
+.hljs-built_in,
+.hljs-type,
+.hljs-literal,
+.hljs-selector-tag {
+  color: var(--rd-syntax-keyword);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-template-tag,
+.hljs-symbol {
+  color: var(--rd-syntax-string);
+}
+
+.hljs-number,
+.hljs-bullet {
+  color: var(--rd-syntax-number);
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--rd-syntax-comment);
+  font-style: italic;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: var(--rd-syntax-title);
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-property,
+.hljs-params,
+.hljs-template-variable {
+  color: var(--rd-syntax-attr);
+}
+
+.hljs-meta,
+.hljs-doctag {
+  color: var(--rd-syntax-meta);
+}
+
+.hljs-addition {
+  color: var(--rd-diff-add-fg);
+  background: var(--rd-diff-line-add-bg);
+}
+
+.hljs-deletion {
+  color: var(--rd-diff-del-fg);
+  background: var(--rd-diff-line-del-bg);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 600;
+}

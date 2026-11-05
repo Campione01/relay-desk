@@ -1,0 +1,941 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  background: var(--rd-bg-app);
+}
+
+body {
+  background: var(--rd-bg-app);
+  color: var(--rd-text-primary);
+  font-family: var(--rd-font-sans);
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  user-select: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: default;
+}
+
+a {
+  color: inherit;
+}
+
+p {
+  margin: 0;
+}
+
+svg {
+  flex: none;
+}
+
+.rd-selectable,
+.rd-selectable * {
+  user-select: text;
+}
+
+.rd-tnum {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.rd-mono {
+  font-family: var(--rd-font-mono);
+}
+
+.rd-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus ring (§3.1): 1 px core + 3 px halo; never on mouse focus. */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--rd-focus-ring),
+    0 0 0 4px var(--rd-focus-halo);
+}
+
+/* Overlay-style scrollbars (§4.16): 6 px thumb, 2 px inset, no track. */
+::-webkit-scrollbar {
+  width: var(--rd-scrollbar-w);
+  height: var(--rd-scrollbar-w);
+  background: transparent;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--rd-scroll-thumb);
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-clip: content-box;
+  min-height: 24px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border-width: 1px;
+}
+
+/* Icon buttons (§4.1) */
+.rd-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 26px;
+  border-radius: var(--rd-r-6);
+  color: var(--rd-icon);
+  transition: background-color 150ms ease-out;
+  -webkit-app-region: no-drag;
+}
+
+.rd-iconbtn--sq {
+  height: 28px;
+}
+
+.rd-iconbtn--sm {
+  width: 24px;
+  height: 24px;
+}
+
+.rd-iconbtn--muted {
+  color: var(--rd-icon-muted);
+}
+
+.rd-iconbtn:hover:not(:disabled) {
+  background: var(--rd-bg-hover);
+  transition-duration: 100ms;
+}
+
+.rd-iconbtn:active:not(:disabled),
+.rd-iconbtn[aria-pressed="true"],
+.rd-iconbtn[aria-expanded="true"] {
+  background: var(--rd-bg-pressed);
+  transition-duration: 0ms;
+}
+
+.rd-iconbtn:disabled {
+  color: var(--rd-text-faint);
+}
+
+/* Text buttons */
+.rd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  white-space: nowrap;
+  transition: background-color 150ms ease-out, opacity 150ms ease-out;
+}
+
+.rd-btn--primary {
+  background: var(--rd-btn-primary-bg);
+  color: var(--rd-btn-primary-fg);
+}
+
+.rd-btn--primary:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.rd-btn--secondary {
+  background: var(--rd-btn-secondary-bg);
+  color: var(--rd-btn-secondary-fg);
+}
+
+.rd-btn--secondary:hover:not(:disabled) {
+  background: var(--rd-bg-pressed);
+}
+
+.rd-btn--danger {
+  background: var(--rd-btn-danger-bg);
+  color: var(--rd-btn-danger-fg);
+}
+
+.rd-btn--danger:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.rd-btn--ghost {
+  color: var(--rd-text-secondary);
+}
+
+.rd-btn--ghost:hover:not(:disabled) {
+  background: var(--rd-bg-hover);
+}
+
+.rd-btn:disabled {
+  background: var(--rd-btn-disabled-bg);
+  color: var(--rd-btn-disabled-fg);
+}
+
+.rd-btn--ghost:disabled {
+  background: none;
+}
+
+.rd-btn__kbd {
+  opacity: 0.7;
+  display: inline-flex;
+}
+
+/* Muted underlined action ("Save" in the Environment card, §4.14) */
+.rd-link {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: var(--rd-r-4);
+  padding: 0 2px;
+  white-space: nowrap;
+}
+
+.rd-link:hover:not(:disabled) {
+  color: var(--rd-text-secondary);
+}
+
+.rd-link:disabled {
+  color: var(--rd-text-disabled);
+}
+
+/* Inputs */
+.rd-input,
+.rd-select,
+.rd-textarea {
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--rd-border-input);
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-input);
+  color: var(--rd-text-primary);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  user-select: text;
+}
+
+.rd-textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.rd-input::placeholder,
+.rd-textarea::placeholder {
+  color: var(--rd-text-muted);
+}
+
+.rd-input:focus-visible,
+.rd-select:focus-visible,
+.rd-textarea:focus-visible {
+  border-color: var(--rd-focus-ring);
+}
+
+.rd-field {
+  display: grid;
+  gap: 4px;
+}
+
+.rd-field__label {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-secondary);
+}
+
+.rd-field__hint {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-field__error {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-danger-text);
+}
+
+.rd-check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-check input {
+  margin: 2px 0 0;
+  accent-color: var(--rd-info);
+}
+
+/* Segmented control (§4.2 Chat/Code toggle style) */
+.rd-segmented {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-segment-track);
+}
+
+.rd-segmented__item {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  color: var(--rd-text-muted);
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.rd-segmented__item[aria-checked="true"] {
+  background: var(--rd-bg-segment-thumb);
+  color: var(--rd-text-primary);
+  box-shadow: 0 0 0 1px var(--rd-border-search);
+}
+
+/* Toggle (§4.14) */
+.rd-toggle {
+  position: relative;
+  display: inline-block;
+  width: 26px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--rd-toggle-off-track);
+  transition: background-color 150ms var(--rd-ease);
+}
+
+.rd-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--rd-toggle-knob);
+  box-shadow: 0 0 0 1px var(--rd-toggle-knob-edge);
+  transition: transform 150ms var(--rd-ease);
+}
+
+.rd-toggle[aria-checked="true"] {
+  background: var(--rd-toggle-on-track);
+}
+
+.rd-toggle[aria-checked="true"]::after {
+  transform: translateX(11px);
+}
+
+/* Working spinner (§5.1): four accent dots, square <-> row of three. */
+.rd-spinner {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.rd-spinner--sm {
+  transform: scale(0.75);
+}
+
+.rd-spinner i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--rd-accent);
+  animation: 1.2s var(--rd-ease-spin) infinite;
+}
+
+.rd-spinner i:nth-child(1) {
+  left: 1px;
+  top: 1px;
+  animation-name: rd-dot-tl;
+}
+
+.rd-spinner i:nth-child(2) {
+  left: 11px;
+  top: 1px;
+  animation-name: rd-dot-tr;
+  animation-delay: 150ms;
+}
+
+.rd-spinner i:nth-child(3) {
+  left: 1px;
+  top: 11px;
+  animation-name: rd-dot-bl;
+  animation-delay: 300ms;
+}
+
+.rd-spinner i:nth-child(4) {
+  left: 11px;
+  top: 11px;
+  animation-name: rd-dot-br;
+  animation-delay: 150ms;
+}
+
+@keyframes rd-dot-tl {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40%,
+  60% {
+    transform: translate(-1.75px, 5px) scale(0.85);
+  }
+}
+
+@keyframes rd-dot-tr {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40%,
+  60% {
+    transform: translate(-5px, 5px) scale(0.75);
+  }
+}
+
+@keyframes rd-dot-bl {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40%,
+  60% {
+    transform: translate(5px, -5px) scale(0.75);
+  }
+}
+
+@keyframes rd-dot-br {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40%,
+  60% {
+    transform: translate(1.75px, -5px) scale(0.85);
+  }
+}
+
+/* Mini bar (§4.14): fill has a minimum width equal to its height. */
+.rd-minibar {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rd-border);
+  overflow: hidden;
+  flex: none;
+}
+
+.rd-minibar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  min-width: 8px;
+  border-radius: 999px;
+  background: var(--rd-info);
+}
+
+.rd-minibar--high .rd-minibar__fill {
+  background: var(--rd-usage-ring-high);
+}
+
+/* Letter avatars (§4.14 connectors / §4.2 footer) */
+.rd-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--rd-bg-avatar);
+  color: var(--rd-text-primary);
+  font-size: var(--rd-fs-11);
+  line-height: 1;
+  font-weight: 500;
+  flex: none;
+}
+
+.rd-avatar--square {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--rd-bg-input);
+  box-shadow: inset 0 0 0 1px var(--rd-border);
+  color: var(--rd-text-secondary);
+}
+
+.rd-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 17px;
+  padding: 0 6px;
+  border-radius: var(--rd-r-4);
+  background: var(--rd-bg-badge);
+  color: var(--rd-text-badge);
+  font-size: var(--rd-fs-11);
+  line-height: var(--rd-lh-14);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.rd-badge--warning {
+  border-radius: 999px;
+  padding: 0 8px;
+  background: var(--rd-warning-badge-bg);
+  color: var(--rd-warning-badge-fg);
+}
+
+.rd-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rd-status-dot);
+  flex: none;
+}
+
+.rd-dot--ok {
+  background: var(--rd-success);
+}
+
+.rd-dot--warn {
+  background: var(--rd-warning-dot);
+}
+
+.rd-dot--off {
+  background: var(--rd-text-disabled);
+}
+
+/* A reply that finished while another session was in view, or "Mark as unread". */
+.rd-dot--unread {
+  background: var(--rd-info);
+}
+
+.rd-dot--running {
+  background: var(--rd-accent);
+  animation: rd-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes rd-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Popover menu (§4.12) */
+.rd-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 200px;
+  max-width: 320px;
+  max-height: min(420px, calc(100vh - 48px));
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  color: var(--rd-text-primary);
+  animation: rd-pop-in 120ms var(--rd-ease);
+}
+
+@keyframes rd-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+
+/* The shortcut letter stays muted, as in the desktop. */
+.rd-menu__item.rd-menu__item--danger {
+  color: var(--rd-danger-text);
+}
+
+.rd-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  text-align: left;
+  color: var(--rd-text-primary);
+}
+
+.rd-menu__item svg {
+  color: var(--rd-icon);
+}
+
+.rd-menu__item[data-active="true"]:not([aria-disabled="true"]) {
+  background: var(--rd-bg-hover);
+}
+
+.rd-menu__item[aria-disabled="true"] {
+  color: var(--rd-text-disabled);
+}
+
+.rd-menu__item[aria-disabled="true"] svg {
+  color: var(--rd-text-disabled);
+}
+
+.rd-menu__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.rd-menu__desc {
+  display: block;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-menu__item[aria-disabled="true"] .rd-menu__desc {
+  color: var(--rd-text-disabled);
+}
+
+/* With the space before it, about the row's 6 px gap; top-aligned so the 17 px pill keeps the row at 24 px. */
+.rd-menu__badge {
+  margin-left: 3px;
+  vertical-align: top;
+}
+
+.rd-menu__right {
+  margin-left: auto;
+  padding-left: 12px;
+  color: var(--rd-text-muted);
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.rd-menu__right svg {
+  color: var(--rd-text-muted);
+}
+
+.rd-menu__value {
+  margin-right: 6px;
+}
+
+.rd-menu__item[aria-checked="true"] .rd-menu__switch {
+  background: var(--rd-toggle-on-track);
+}
+
+.rd-menu__item[aria-checked="true"] .rd-menu__switch::after {
+  transform: translateX(11px);
+}
+
+.rd-menu__section {
+  padding: 6px 8px 2px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-faint);
+}
+
+.rd-menu__sep {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--rd-border-strong);
+}
+
+/* Footer model menu and its submenus, measured from the desktop app: sized to the content, a muted
+   header, separators inset to the text, a blue 14 px check and 16 px chevrons pulled into the row's right padding. */
+.rd-menu--model {
+  min-width: 128px;
+  max-width: 260px;
+}
+
+.rd-menu--model .rd-menu__section {
+  padding-top: 4px;
+  color: var(--rd-text-muted);
+}
+
+/* The sidebar's session menu shares the desktop menu look. */
+.rd-menu--model .rd-menu__sep,
+.rd-menu--session .rd-menu__sep {
+  margin: 4px 8px;
+  background: var(--rd-border);
+}
+
+.rd-menu--model .rd-menu__check svg,
+.rd-menu--session .rd-menu__check svg {
+  width: 14px;
+  height: 14px;
+  margin-right: -4px;
+  color: var(--rd-info);
+}
+
+.rd-menu--model .rd-menu__right > .lucide-chevron-right,
+.rd-menu--session .rd-menu__right > .lucide-chevron-right {
+  width: 16px;
+  height: 16px;
+  margin-right: -5px;
+}
+
+/* Tooltips (§4.15) */
+.rd-tooltip {
+  position: fixed;
+  z-index: 80;
+  max-width: 260px;
+  padding: 6px 10px;
+  border-radius: var(--rd-r-7);
+  background: var(--rd-bg-tooltip);
+  box-shadow: 0 0 0 1px var(--rd-tooltip-edge);
+  color: var(--rd-text-on-tooltip);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  pointer-events: none;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  animation: rd-fade-in 100ms ease-out;
+}
+
+.rd-tooltip--multi {
+  max-width: 195px;
+  padding: 8px 10px;
+  border-radius: var(--rd-r-8);
+}
+
+.rd-tooltip__key {
+  color: var(--rd-text-on-tooltip-muted);
+  margin-left: 8px;
+}
+
+@keyframes rd-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Dialogs */
+.rd-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--rd-bg-backdrop);
+  animation: rd-fade-in 120ms ease-out;
+}
+
+.rd-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
+  max-height: calc(100vh - 48px);
+  border-radius: var(--rd-r-12);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-dialog);
+  color: var(--rd-text-primary);
+  animation: rd-pop-in 140ms var(--rd-ease);
+  user-select: text;
+}
+
+.rd-dialog--wide {
+  width: min(720px, 100%);
+}
+
+.rd-dialog--medium {
+  width: min(560px, 100%);
+}
+
+.rd-dialog__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 16px 4px 20px;
+}
+
+.rd-dialog__title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 600;
+}
+
+.rd-dialog__body {
+  padding: 8px 20px 16px;
+  overflow-y: auto;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  display: grid;
+  gap: 12px;
+}
+
+.rd-dialog__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px 16px 20px;
+  border-top: 1px solid var(--rd-border-subtle);
+}
+
+.rd-dialog__foot-left {
+  margin-right: auto;
+}
+
+/* Toasts */
+body:has([data-suppress-info-toasts]) .rd-toast:not(.rd-toast--error) {
+  display: none;
+}
+
+.rd-auth-choice__text > .rd-field__hint {
+  display: block;
+  margin-top: 2px;
+}
+
+.rd-toasts {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  z-index: 75;
+  display: grid;
+  gap: 8px;
+  max-width: 360px;
+  margin-inline: auto;
+  pointer-events: none;
+}
+
+.rd-content[data-panel="true"] .rd-toasts {
+  right: max(16px, clamp(0px, calc(1392px - 100%), 312px));
+}
+
+.rd-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 10px 10px 12px;
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  animation: rd-pop-in 140ms var(--rd-ease);
+  user-select: text;
+}
+
+.rd-toast__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rd-toast--error .rd-toast__text {
+  color: var(--rd-danger-text);
+}
+
+.rd-toast svg {
+  margin-top: 1px;
+}
+
+/* A known native failure in plain words (banner or toast); the original text folds under Details. */
+.rd-errmsg {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rd-errmsg__summary {
+  width: fit-content;
+  font-size: var(--rd-fs-12);
+  color: inherit;
+  cursor: pointer;
+}
+
+.rd-errmsg__raw {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--rd-fs-12);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Static 2x2 pose with a slow opacity pulse (§5.1). */
+  .rd-spinner i {
+    animation: rd-reduced-pulse 2s ease-in-out infinite !important;
+    transform: none !important;
+  }
+
+  .rd-dot--running {
+    animation: none !important;
+  }
+}
+
+@keyframes rd-reduced-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,324 @@
+[
+  {
+    "type": "user",
+    "uuid": "u-01",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": { "role": "user", "content": "Fix the failing test in src/app.ts" },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null,
+    "timestamp": "2026-10-16T09:00:00.000Z"
+  },
+  {
+    "type": "user",
+    "uuid": "u-02",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": { "role": "user", "content": "Synthetic meta note that must not show." },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null,
+    "is_meta": true
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-01",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_01",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [{ "type": "thinking", "thinking": "I should read the file first.", "signature": "sig" }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-02",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_01",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [{ "type": "text", "text": "Let me look at the file." }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-03",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_01",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [
+        { "type": "tool_use", "id": "toolu_read", "name": "Read", "input": { "file_path": "D:\\work\\demo\\src\\app.ts" } }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-03",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [{ "type": "tool_result", "tool_use_id": "toolu_read", "content": "1\tconst x = 1;" }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-04",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_02",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [
+        {
+          "type": "tool_use",
+          "id": "toolu_edit",
+          "name": "Edit",
+          "input": {
+            "file_path": "D:\\work\\demo\\src\\app.ts",
+            "old_string": "const x = 1;\nconst y = 2;",
+            "new_string": "const x = 2;\nconst y = 2;\nconst z = 3;"
+          }
+        }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-04",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_edit",
+          "is_error": true,
+          "content": "The user doesn't want to proceed with this tool use. The tool use was rejected (eg. if it was a file edit, the new_string was NOT written to the file). STOP what you are doing and wait for the user to tell you how to proceed."
+        }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-05",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_03",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [{ "type": "tool_use", "id": "toolu_bash", "name": "Bash", "input": { "command": "npm test", "description": "Run tests" } }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-05",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_bash",
+          "is_error": true,
+          "content": [{ "type": "text", "text": "\u001b[31mFAIL\u001b[0m tests/app.test.ts\nExpected 2, received 1" }]
+        }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-06",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_04",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [
+        {
+          "type": "tool_use",
+          "id": "toolu_task",
+          "name": "Task",
+          "input": { "description": "Explore the tests", "subagent_type": "Explore", "prompt": "Find the test files." }
+        }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-06",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [{ "type": "tool_result", "tool_use_id": "toolu_task", "content": [{ "type": "text", "text": "Found 1 test file." }] }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-07",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_05",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [{ "type": "tool_use", "id": "toolu_mcp", "name": "mcp__github__create_issue", "input": { "title": "Flaky test" } }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-07",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_mcp",
+          "content": [
+            { "type": "text", "text": "Created issue #12" },
+            { "type": "image", "source": { "type": "base64", "media_type": "image/png", "data": "AAAA" } }
+          ]
+        }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-08",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": { "role": "user", "content": [{ "type": "text", "text": "[Request interrupted by user]" }] },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-09",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [
+        { "type": "text", "text": "Here is a screenshot of the error" },
+        { "type": "image", "source": { "type": "base64", "media_type": "image/png", "data": "AAAA" } }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-10",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": { "role": "user", "content": "This session is being continued from a previous conversation. Summary: synthetic." },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null,
+    "isCompactSummary": true,
+    "is_meta": true
+  },
+  {
+    "type": "user",
+    "uuid": "u-11",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": "<command-name>/compact</command-name>\n<command-message>compact</command-message>\n<command-args>keep the tests</command-args>"
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "u-12",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": { "role": "user", "content": "<local-command-stdout>\u001b[2mCompacted.\u001b[22m</local-command-stdout>" },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-08",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_06",
+      "role": "assistant",
+      "model": "<synthetic>",
+      "content": [{ "type": "text", "text": "API Error: 529 overloaded" }]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "a-09",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_07",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [
+        { "type": "redacted_thinking", "data": "opaque" },
+        { "type": "text", "text": "Done. The test passes now." }
+      ]
+    },
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "system",
+    "uuid": "s-01",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": null,
+    "parent_tool_use_id": null,
+    "parent_agent_id": null
+  },
+  {
+    "type": "assistant",
+    "uuid": "sa-01",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "id": "msg_sub_01",
+      "role": "assistant",
+      "model": "claude-test-1",
+      "content": [
+        { "type": "text", "text": "Subagent text stays inside the subagent." },
+        { "type": "tool_use", "id": "toolu_grep", "name": "Grep", "input": { "pattern": "describe\\(", "path": "D:\\work\\demo\\tests" } }
+      ]
+    },
+    "parent_tool_use_id": "toolu_task",
+    "parent_agent_id": null
+  },
+  {
+    "type": "user",
+    "uuid": "su-01",
+    "session_id": "11111111-2222-4333-8444-555555555555",
+    "message": {
+      "role": "user",
+      "content": [{ "type": "tool_result", "tool_use_id": "toolu_grep", "content": "tests/app.test.ts" }]
+    },
+    "parent_tool_use_id": "toolu_task",
+    "parent_agent_id": null
+  }
+]

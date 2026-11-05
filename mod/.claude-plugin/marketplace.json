@@ -1,0 +1,12 @@
+{
+  "name": "relay-desk-local",
+  "description": "Local marketplace for the Relay Desk hand-off mod",
+  "owner": { "name": "Relay Desk" },
+  "plugins": [
+    {
+      "name": "relay-desk-handoff",
+      "source": "./relay-desk-handoff",
+      "description": "Adds a button and a /relay command that continue the current session in Relay Desk"
+    }
+  ]
+}

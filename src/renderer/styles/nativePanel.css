@@ -1,0 +1,131 @@
+/* Native CLI panel (a slash command's dialog) mirrored above the composer, in the permission card's family. */
+.rd-npanel {
+  --rd-npanel-fg: var(--rd-text-primary);
+  --rd-npanel-bg: var(--rd-bg-card);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: 60vh;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-npanel-bg);
+  color: var(--rd-npanel-fg);
+  animation: rd-slide-up 160ms var(--rd-ease);
+  transition: border-color 150ms ease-out;
+}
+
+:root:not([data-theme="dark"]) .rd-npanel {
+  --rd-npanel-bg: var(--rd-bg-input);
+}
+
+.rd-npanel:focus-within {
+  border-color: var(--rd-border-strong);
+}
+
+.rd-npanel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 6px 6px 0 14px;
+}
+
+.rd-npanel__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  font-weight: 600;
+  color: var(--rd-text-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Takes the keyboard for the panel (keys, IME composition, paste); kept inside the head so typing never scrolls. */
+.rd-npanel__input {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  overflow: hidden;
+  resize: none;
+  pointer-events: none;
+  caret-color: transparent;
+}
+
+/* The gutter stays reserved so a scrollbar never changes the width the font is fitted to. */
+.rd-npanel__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 4px 4px 12px 14px;
+}
+
+.rd-npanel__grid,
+.rd-npanel__probes {
+  font-family: var(--rd-font-mono);
+  font-kerning: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  white-space: pre;
+}
+
+.rd-npanel__grid {
+  min-width: 100%;
+  color: var(--rd-npanel-fg);
+}
+
+.rd-npanel__row {
+  display: flex;
+  height: var(--rd-npanel-row);
+  line-height: var(--rd-npanel-row);
+}
+
+/* Every grapheme keeps the CLI's cells: plain ASCII as runs of text, other glyphs one by one. */
+.rd-npanel__text,
+.rd-npanel__glyph,
+.rd-npanel__box {
+  flex: none;
+  width: calc(var(--rd-cells) * var(--rd-npanel-cell));
+}
+
+.rd-npanel__glyph {
+  display: flex;
+  justify-content: center;
+}
+
+/* Box drawing from a fallback font is stretched to its cells so lines stay unbroken. */
+.rd-npanel__box > span {
+  display: inline-block;
+  transform: scaleX(var(--rd-npanel-box, 1));
+  transform-origin: 0 50%;
+}
+
+.rd-npanel__probes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.rd-npanel__probes > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Read right after their font size changes; the reduced-motion transition would still report the old size. */
+  transition: none !important;
+}

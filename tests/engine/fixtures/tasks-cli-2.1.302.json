@@ -1,0 +1,118 @@
+[
+ {
+  "type": "system",
+  "subtype": "background_tasks_changed",
+  "tasks": [
+   {
+    "task_id": "b00000001",
+    "run_id": "0aaaa0001-00000001",
+    "task_type": "local_bash",
+    "description": "Ping localhost in background"
+   }
+  ]
+ },
+ {
+  "type": "system",
+  "subtype": "task_started",
+  "task_id": "b00000001",
+  "run_id": "0aaaa0001-00000001",
+  "tool_use_id": "toolu_01SyntheticBackgroundCmd",
+  "description": "Ping localhost in background",
+  "is_backgrounded": true,
+  "task_type": "local_bash"
+ },
+ {
+  "type": "system",
+  "subtype": "background_tasks_changed",
+  "tasks": [
+   {
+    "task_id": "b00000001",
+    "run_id": "0aaaa0001-00000001",
+    "task_type": "local_bash",
+    "description": "Ping localhost in background"
+   },
+   {
+    "task_id": "a0000000000000003",
+    "run_id": "0aaaa0002-00000002",
+    "task_type": "local_agent",
+    "subagent_type": "general-purpose",
+    "description": "Reply done"
+   }
+  ]
+ },
+ {
+  "type": "system",
+  "subtype": "task_started",
+  "task_id": "a0000000000000003",
+  "run_id": "0aaaa0002-00000002",
+  "tool_use_id": "toolu_01SyntheticBackgroundAgt",
+  "description": "Reply done",
+  "subagent_type": "general-purpose",
+  "is_backgrounded": true,
+  "spawn_depth": 1,
+  "task_type": "local_agent",
+  "prompt": "Reply with the single word done."
+ },
+ {
+  "type": "system",
+  "subtype": "task_updated",
+  "task_id": "a0000000000000003",
+  "run_id": "0aaaa0002-00000002",
+  "patch": {
+   "status": "completed",
+   "end_time": 1700000861561
+  }
+ },
+ {
+  "type": "system",
+  "subtype": "task_notification",
+  "task_id": "a0000000000000003",
+  "run_id": "0aaaa0002-00000002",
+  "tool_use_id": "toolu_01SyntheticBackgroundAgt",
+  "status": "completed",
+  "output_file": "C:\\Temp\\claude\\tasks\\a0000000000000003.output",
+  "summary": "done",
+  "usage": {
+   "total_tokens": 15801,
+   "tool_uses": 0,
+   "duration_ms": 1564
+  }
+ },
+ {
+  "type": "system",
+  "subtype": "background_tasks_changed",
+  "tasks": [
+   {
+    "task_id": "b00000001",
+    "run_id": "0aaaa0001-00000001",
+    "task_type": "local_bash",
+    "description": "Ping localhost in background"
+   }
+  ]
+ },
+ {
+  "type": "system",
+  "subtype": "task_updated",
+  "task_id": "b00000001",
+  "run_id": "0aaaa0001-00000001",
+  "patch": {
+   "status": "completed",
+   "end_time": 1700000865090
+  }
+ },
+ {
+  "type": "system",
+  "subtype": "task_notification",
+  "task_id": "b00000001",
+  "run_id": "0aaaa0001-00000001",
+  "tool_use_id": "toolu_01SyntheticBackgroundCmd",
+  "status": "completed",
+  "output_file": "C:\\Temp\\claude\\tasks\\b00000001.output",
+  "summary": "Background command \"Ping localhost in background\" completed (exit code 0)"
+ },
+ {
+  "type": "system",
+  "subtype": "background_tasks_changed",
+  "tasks": []
+ }
+]

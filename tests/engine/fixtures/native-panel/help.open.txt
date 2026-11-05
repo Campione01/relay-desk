@@ -1,0 +1,47 @@
+          Claude Code v2.1.308
+           Opus 5.5 with xhigh effort · API Usage Billing
+           C:\RelayDeskNativePrototype\acceptance\native-EF1YeC\workspace
+
+
+> /effort
+  ⎿  Cancelled
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
+   Help  General   Commands   Custom commands
+
+
+   Claude understands your codebase, makes edits with your permission, and executes commands — right from your terminal.
+
+   New here? Run /powerup to learn the features most people miss.
+
+   Shortcuts
+   ! for shell mode          double tap esc to clear input        ctrl + shift + _ to undo
+   / for commands            shift + tab to auto-accept edits     alt + v to paste images
+   @ for file paths          ctrl + o for verbose output          alt + p to switch model
+   /btw for side question    ctrl + t to toggle tasks             ctrl + s to stash prompt
+                             backslash (\) + return (⏎) for       ctrl + g to edit in $EDITOR
+                             newline                              /keybindings to customize
+
+
+   For more help: https://code.claude.com/docs/en/overview
+
+   Esc to cancel

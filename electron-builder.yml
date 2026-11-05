@@ -1,0 +1,59 @@
+appId: com.relaydesk.app
+productName: Relay Desk
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - package.json
+  # The copy that an interrupted npm run cli:<track> can leave beside claude.exe is never packaged.
+  - '!node_modules/@anthropic-ai/claude-agent-sdk-win32-x64/claude.exe.relay-new'
+asar: true
+npmRebuild: false
+nodeGypRebuild: false
+# claude.exe must be a real file on disk to be spawned, so the SDK platform package stays outside the asar.
+asarUnpack:
+  - node_modules/@anthropic-ai/claude-agent-sdk-win32-x64/**
+extraResources:
+  - from: tools/native/bin/RelayNativeHost.exe
+    to: native/RelayNativeHost.exe
+  - from: tools/private-storage/bin/RelayPrivateStorage.exe
+    to: private-storage/RelayPrivateStorage.exe
+  - from: tools/auth/bin/RelayAuthHost.exe
+    to: auth/RelayAuthHost.exe
+  - from: native-mod
+    to: native-mod
+    filter:
+      - .claude-plugin/plugin.json
+      - hooks/**
+  # Tray icon: build/ is not shipped, and the .ico keeps every size for the notification area.
+  - from: build/icon.ico
+    to: icon.ico
+  # The bundled fonts (SIL Open Font License 1.1) ship with their licenses.
+  - from: node_modules/@fontsource-variable/dm-sans/LICENSE
+    to: licenses/DM-Sans-OFL.txt
+  - from: node_modules/@fontsource-variable/jetbrains-mono/LICENSE
+    to: licenses/JetBrains-Mono-OFL.txt
+protocols:
+  - name: Relay Desk
+    schemes:
+      - relaydesk
+win:
+  icon: build/icon.ico
+  # claude.exe is Anthropic's signed binary and its sha256 is what this source admits: never sign or edit it.
+  signExts:
+    - '!claude.exe'
+  target:
+    - target: portable
+      arch:
+        - x64
+    - target: nsis
+      arch:
+        - x64
+portable:
+  artifactName: Relay-Desk-${version}-Portable.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: Relay-Desk-${version}-Setup.${ext}

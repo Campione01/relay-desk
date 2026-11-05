@@ -1,0 +1,47 @@
+          Claude Code v2.1.308
+           Opus 5.5 with xhigh effort · API Usage Billing
+           C:\RelayDeskNativePrototype\acceptance\native-EF1YeC\workspace
+
+
+> /effort
+  ⎿  Cancelled
+
+> /model
+  ⎿  Kept model as Opus 5.5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
+   Permissions  Recently denied   Allow   Ask   Deny   Auto mode   Workspace
+
+   Claude Code won't ask before using allowed tools.
+   ╭───────────────────────────────────────────────╮
+   │ ⌕ Search…                                     │
+   ╰───────────────────────────────────────────────╯
+
+     1. Add a new rule…
+
+   ←/→ to switch · ↓ to select · Esc to cancel

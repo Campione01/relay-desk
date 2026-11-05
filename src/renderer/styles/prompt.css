@@ -1,0 +1,621 @@
+/* Bottom stack: cards, banner, shortcut bar (§6.1), prompt box (§4.10), row under it (§4.11). */
+.rd-bottom {
+  flex: none;
+  padding-bottom: 6px;
+  padding-right: calc(16px + var(--rd-scrollbar-w));
+}
+
+.rd-content[data-panel="true"] .rd-bottom {
+  padding-right: calc(max(16px, clamp(0px, calc(1392px - 100%), 312px)) + var(--rd-scrollbar-w));
+}
+
+.rd-bottom__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Shortcut bar */
+.rd-shortcutbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+}
+
+.rd-shortcutbar__group {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  height: 24px;
+  padding: 0 6px 0 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  transition: background-color 150ms ease-out;
+}
+
+.rd-shortcutbar__group:hover,
+.rd-shortcutbar__group[aria-expanded="true"] {
+  background: var(--rd-bg-hover);
+}
+
+.rd-shortcutbar__group svg {
+  color: var(--rd-text-muted);
+}
+
+.rd-shortcutbar__chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 24px 2px 2px;
+  margin: -2px 0;
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+}
+
+.rd-shortcutbar__chips::-webkit-scrollbar {
+  display: none;
+}
+
+.rd-shortcutbar__empty {
+  font-size: var(--rd-fs-12);
+  color: var(--rd-text-muted);
+  white-space: nowrap;
+}
+
+.rd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  white-space: nowrap;
+  transition: background-color 150ms ease-out;
+}
+
+.rd-chip svg {
+  color: var(--rd-icon-muted);
+}
+
+.rd-chip:hover:not([aria-disabled="true"]) {
+  background: color-mix(in srgb, var(--rd-bg-inset), var(--rd-text-primary) 6%);
+  transition-duration: 100ms;
+}
+
+.rd-chip:active:not([aria-disabled="true"]) {
+  background: var(--rd-bg-pressed);
+  transition-duration: 0ms;
+}
+
+.rd-chip[aria-disabled="true"],
+.rd-chip[aria-disabled="true"] svg {
+  color: var(--rd-text-disabled);
+}
+
+.rd-shortcutbar__edit {
+  flex: none;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  color: var(--rd-text-muted);
+  transition: background-color 150ms ease-out;
+}
+
+.rd-shortcutbar__edit:hover {
+  background: var(--rd-bg-hover);
+  color: var(--rd-text-secondary);
+}
+
+/* Prompt box */
+.rd-prompt {
+  position: relative;
+}
+
+.rd-prompt__box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 46px;
+  padding: 8px 8px 8px 7px;
+  border: 1px solid var(--rd-border-input);
+  border-radius: var(--rd-r-14);
+  background: var(--rd-bg-input);
+  box-shadow: var(--rd-shadow-input);
+  transition: border-color 150ms ease-out;
+}
+
+.rd-prompt__box:focus-within {
+  border-color: var(--rd-border-strong);
+}
+
+/* Files dragged over the session pane (§4.10). */
+.rd-prompt__box[data-drag] {
+  outline: 1px dashed var(--rd-info);
+  outline-offset: -1px;
+  background: var(--rd-bg-hover);
+}
+
+/* Attachment chips above the input: rounded thumbnails for images, tiles for PDFs. */
+.rd-attach {
+  flex: 0 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 2px 1px 2px;
+  list-style: none;
+}
+
+.rd-attach__item {
+  position: relative;
+  flex: none;
+}
+
+.rd-attach__body {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-inset);
+}
+
+.rd-attach__item[data-kind="image"] .rd-attach__body {
+  width: 56px;
+}
+
+.rd-attach__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rd-attach__item[data-kind="pdf"] .rd-attach__body {
+  gap: 8px;
+  max-width: 220px;
+  padding: 0 12px 0 8px;
+  background: var(--rd-bg-input);
+}
+
+.rd-attach__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  color: var(--rd-icon-muted);
+}
+
+.rd-attach__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rd-attach__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-attach__type {
+  font-size: var(--rd-fs-11);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-attach__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--rd-text-primary);
+  color: var(--rd-bg-input);
+  box-shadow: 0 0 0 2px var(--rd-bg-input);
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+.rd-attach__item:hover .rd-attach__remove,
+.rd-attach__item:focus-within .rd-attach__remove {
+  opacity: 1;
+}
+
+.rd-attach__remove:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--rd-bg-input),
+    0 0 0 3px var(--rd-focus-ring);
+}
+
+/* Why a pasted or dropped file was not attached. */
+.rd-prompt__notice {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 0 2px 6px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-danger-text);
+}
+
+.rd-prompt__notice-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.rd-prompt__plus {
+  border-radius: var(--rd-r-8);
+}
+
+.rd-prompt__plus[aria-expanded="true"] {
+  background: var(--rd-bg-pressed-soft);
+}
+
+.rd-prompt__field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.rd-prompt__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-primary);
+  caret-color: var(--rd-text-primary);
+  overflow-y: hidden;
+}
+
+.rd-prompt__input:focus-visible {
+  box-shadow: none;
+}
+
+.rd-prompt__input::placeholder {
+  color: var(--rd-text-muted);
+  opacity: 1;
+}
+
+.rd-prompt__hint {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.rd-prompt__hint-slash {
+  visibility: hidden;
+  margin-right: 3px;
+}
+
+.rd-prompt__action {
+  color: var(--rd-text-primary);
+}
+
+.rd-prompt__action:disabled {
+  color: var(--rd-text-disabled);
+}
+
+/* Slash popup (§4.13) */
+.rd-slash {
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 26px;
+  z-index: 20;
+  width: 238px;
+}
+
+.rd-slash__list {
+  list-style: none;
+  margin: 0;
+  max-height: min(380px, 50vh);
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  animation: rd-pop-in 120ms var(--rd-ease);
+}
+
+.rd-slash__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+  white-space: nowrap;
+}
+
+.rd-slash__row[aria-selected="true"] {
+  background: var(--rd-bg-hover);
+}
+
+.rd-slash__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rd-slash__arg {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--rd-text-muted);
+}
+
+.rd-slash__tag {
+  margin-left: auto;
+  font-size: var(--rd-fs-11);
+  color: var(--rd-text-faint);
+}
+
+.rd-slash__tip {
+  position: absolute;
+  left: calc(100% - 6px);
+  z-index: 21;
+  width: max-content;
+  max-width: 195px;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-tooltip);
+  box-shadow: 0 0 0 1px var(--rd-tooltip-edge);
+  color: var(--rd-text-on-tooltip);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  pointer-events: none;
+}
+
+/* Row under the prompt box */
+.rd-promptfoot {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin-top: -2px;
+  padding: 0 9px 0 9px;
+}
+
+.rd-promptfoot__btn {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  white-space: nowrap;
+  transition: background-color 150ms ease-out;
+}
+
+.rd-promptfoot__btn:hover,
+.rd-promptfoot__btn[aria-expanded="true"] {
+  background: var(--rd-bg-hover);
+}
+
+.rd-promptfoot__right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* One button for model and effort, a 24 px pill as in the desktop app. */
+.rd-promptfoot__model {
+  height: 24px;
+  gap: 8px;
+  padding: 0 6px;
+}
+
+.rd-promptfoot__effort {
+  color: var(--rd-text-muted);
+}
+
+/* Fast mode mark 3 px after the model name; the capture's account had no fast mode, so the place is inferred. */
+.rd-promptfoot__fast {
+  display: inline-flex;
+  align-items: center;
+  margin-left: -5px;
+  color: var(--rd-accent);
+}
+
+.rd-promptfoot__fast[data-state="cooldown"] {
+  color: var(--rd-text-faint);
+}
+
+.rd-promptfoot__fast[data-state="unavailable"] {
+  color: var(--rd-text-disabled);
+}
+
+.rd-promptfoot__ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 6px;
+  border-radius: var(--rd-r-6);
+}
+
+.rd-promptfoot__ring:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-promptfoot__ring[aria-expanded="true"] {
+  background: var(--rd-bg-pressed);
+}
+
+/* Limit mark after the effort label (desktop-light-07: "Max ⚠"). */
+.rd-promptfoot__warn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: -3px;
+  color: var(--rd-warning-glyph);
+}
+
+/* Usage popover on the ring (U1), measured from desktop-light-07 at 2x. */
+.rd-usage {
+  position: fixed;
+  z-index: 60;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 8px 12px 12px;
+  border-radius: var(--rd-r-14);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  color: var(--rd-text-primary);
+  animation: rd-pop-in 120ms var(--rd-ease);
+}
+
+.rd-usage__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  margin-right: -4px;
+}
+
+.rd-usage__title {
+  margin: 0;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 500;
+}
+
+.rd-usage__tools {
+  display: flex;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.rd-usage__tools .rd-iconbtn {
+  color: var(--rd-text-primary);
+}
+
+.rd-usage__row {
+  margin-top: 11px;
+}
+
+.rd-usage__head + .rd-usage__row {
+  margin-top: 7px;
+}
+
+.rd-usage__line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-usage__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.rd-usage__value {
+  flex: none;
+  margin-left: auto;
+  color: var(--rd-text-muted);
+}
+
+.rd-usage__bar {
+  position: relative;
+  height: 8px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--rd-bg-meter-track);
+  box-shadow: inset 0 0 0 1px var(--rd-meter-track-edge);
+}
+
+.rd-usage__bar--thin {
+  height: 4px;
+  border-radius: 2px;
+}
+
+.rd-usage__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--rd-usage-ring);
+}
+
+.rd-usage__row[data-limit] .rd-usage__fill {
+  background: var(--rd-meter-high);
+}
+
+.rd-usage__sub {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  margin-top: 2px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-usage__countdown {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rd-usage__status {
+  margin: 10px 0 0;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-usage__status--error {
+  color: var(--rd-danger-text);
+}
+
+.rd-usage__status .rd-link {
+  margin-left: 6px;
+}

@@ -1,0 +1,547 @@
+/* Background tasks side pane (desktop: title bar ⋮ > Background tasks). Chrome per §4.19; rows keep the U5 card style. */
+:root {
+  --rd-tasks-pane-w: 360px;
+}
+
+.rd-tpane {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: var(--rd-tasks-pane-w);
+  min-height: 0;
+  margin: 16px 8px 12px 2px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  /* Opaque even where the card fill is transparent (light): it may cover the right panel in a narrow window. */
+  background: linear-gradient(var(--rd-bg-card), var(--rd-bg-card)), var(--rd-bg-app);
+  overflow: hidden;
+  animation: rd-fade-in 150ms ease-out;
+}
+
+.rd-tpane__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 6px 0 12px;
+}
+
+.rd-tpane__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  font-weight: 400;
+  color: var(--rd-text-secondary);
+}
+
+.rd-tpane__body {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 6px 12px;
+}
+
+.rd-tpane__note {
+  margin: 4px 6px 0;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-tpane__note--error {
+  color: var(--rd-danger-text);
+}
+
+.rd-tpane__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Task rows (same metrics as the former panel card) */
+.rd-tlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.rd-trow {
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--rd-r-6);
+  transition: background-color 150ms ease-out;
+}
+
+.rd-trow:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-trow__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 5px 6px;
+  border-radius: var(--rd-r-6);
+  text-align: left;
+}
+
+.rd-trow__icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--rd-icon-muted);
+}
+
+.rd-trow__text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.rd-trow__desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-trow__meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+  white-space: nowrap;
+}
+
+.rd-trow__extra {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rd-trow[data-status="failed"] .rd-trow__status,
+.rd-tdetail__head[data-status="failed"] .rd-trow__status {
+  color: var(--rd-danger-text);
+}
+
+.rd-trow__progress {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-secondary);
+}
+
+.rd-trow__time {
+  flex: none;
+  min-width: 40px;
+  text-align: right;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+.rd-trow[data-status="running"] .rd-trow__time,
+.rd-tdetail__head[data-status="running"] .rd-trow__time {
+  color: var(--rd-text-secondary);
+}
+
+.rd-trow__stop {
+  flex: none;
+  margin: 3px 3px 0 -4px;
+}
+
+.rd-trow__stop--none {
+  width: 24px;
+  height: 24px;
+}
+
+.rd-tdot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--rd-status-dot);
+}
+
+.rd-tdot--running {
+  background: var(--rd-accent);
+  animation: rd-pulse 1.6s ease-in-out infinite;
+}
+
+.rd-tdot--completed {
+  background: var(--rd-success);
+}
+
+.rd-tdot--failed {
+  background: var(--rd-danger-text);
+}
+
+.rd-tdot--pending,
+.rd-tdot--paused {
+  background: var(--rd-warning-dot);
+}
+
+.rd-tdot--stopped,
+.rd-tdot--unknown {
+  background: var(--rd-text-disabled);
+}
+
+/* Detached `claude --bg` sessions */
+.rd-tsection {
+  margin-top: 10px;
+  padding: 8px 6px 0;
+  border-top: 1px solid var(--rd-border-subtle);
+}
+
+.rd-tsection__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 2px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  font-weight: 400;
+  color: var(--rd-text-muted);
+}
+
+.rd-tsection .rd-tpane__note {
+  margin: 4px 0 0;
+}
+
+.rd-tsection__refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--rd-r-4);
+  color: var(--rd-text-muted);
+}
+
+.rd-tsection__refresh:hover {
+  background: var(--rd-bg-hover);
+  color: var(--rd-text-secondary);
+}
+
+.rd-tbg {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rd-tbg__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+}
+
+.rd-tbg__text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.rd-tbg__name,
+.rd-tbg__desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-tbg__name {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-tbg__desc {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+/* Detail view */
+.rd-tdetail {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rd-tdetail__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+}
+
+.rd-tdetail__crumb {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-tdetail__stop {
+  flex: none;
+  height: 24px;
+  padding: 0 8px;
+  gap: 5px;
+  font-size: var(--rd-fs-12);
+}
+
+.rd-tdetail__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 6px;
+}
+
+.rd-tdetail__text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rd-tdetail__title {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  font-weight: 500;
+  color: var(--rd-text-primary);
+}
+
+.rd-tdetail__facts {
+  list-style: none;
+  margin: 0;
+  padding: 0 6px 0 32px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.rd-tdetail__section {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rd-tdetail__label {
+  margin: 4px 6px 0;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  font-weight: 400;
+  color: var(--rd-text-muted);
+}
+
+.rd-toutput {
+  max-height: min(60vh, 520px);
+  margin: 0 6px;
+  padding: 8px 10px;
+  overflow: auto;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+  white-space: pre;
+}
+
+/* Workflow phases and agents */
+.rd-tflow {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rd-tflow__progress {
+  margin: 0 6px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-secondary);
+}
+
+.rd-tphases,
+.rd-tagents {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rd-tagents {
+  margin-bottom: 4px;
+  padding-left: 18px;
+}
+
+.rd-tphase__head,
+.rd-tagent__main {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  border-radius: var(--rd-r-6);
+  text-align: left;
+}
+
+.rd-tphase__head {
+  min-height: 28px;
+  padding: 4px 6px;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-tagent__main {
+  min-height: 26px;
+  padding: 3px 6px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+}
+
+button.rd-tphase__head,
+button.rd-tagent__main {
+  transition: background-color 150ms ease-out;
+}
+
+button.rd-tphase__head:hover,
+button.rd-tagent__main:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-tphase__chev {
+  flex: none;
+  width: 12px;
+  color: var(--rd-text-muted);
+}
+
+.rd-tphase__title,
+.rd-tagent__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-tagent__label {
+  color: var(--rd-text-primary);
+}
+
+.rd-tphase__count,
+.rd-tagent__meta {
+  flex: none;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-tagent[data-state="failed"] .rd-tagent__meta {
+  color: var(--rd-danger-text);
+}
+
+/* A subagent's transcript, compacted to the pane: the conversation's components at 13 px. */
+.rd-tlog {
+  --rd-fs-14: calc(13px * var(--rd-font-scale));
+  --rd-lh-20: calc(18px * var(--rd-font-scale));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding-top: 4px;
+  user-select: text;
+}
+
+.rd-tlog .rd-tools__line {
+  padding-right: 0;
+}
+
+.rd-tlog .rd-imgthumb--user {
+  height: 96px;
+}
+
+/* With the pane open the transcript column is centred on what is left of the session area. */
+.rd-app .rd-content[data-tasks="true"] .rd-colwrap {
+  padding-right: 16px;
+}
+
+.rd-app .rd-content[data-tasks="true"] .rd-bottom {
+  padding-right: calc(16px + var(--rd-scrollbar-w));
+}
+
+.rd-app .rd-content[data-tasks="true"] .rd-toasts {
+  right: calc(var(--rd-tasks-pane-w) + 26px);
+}
+
+/* Room for the right panel overlay beside the pane. */
+.rd-content[data-panel="true"] .rd-tpane {
+  margin-right: calc(var(--rd-panel-card-w) + 19px);
+}
+
+.rd-app .rd-content[data-tasks="true"][data-panel="true"] .rd-toasts {
+  right: calc(var(--rd-tasks-pane-w) + var(--rd-panel-card-w) + 37px);
+}
+
+/* Too narrow for transcript, pane and panel side by side: the pane takes the panel's place while it is open. */
+@media (max-width: 1359px) {
+  .rd-app[data-sidebar="true"] .rd-content[data-tasks="true"] .rd-panel {
+    display: none;
+  }
+
+  .rd-app[data-sidebar="true"] .rd-content[data-panel="true"] .rd-tpane {
+    margin-right: 8px;
+  }
+
+  .rd-app[data-sidebar="true"] .rd-content[data-tasks="true"][data-panel="true"] .rd-toasts {
+    right: calc(var(--rd-tasks-pane-w) + 26px);
+  }
+}
+
+@media (max-width: 1145px) {
+  .rd-app[data-sidebar="false"] .rd-content[data-tasks="true"] .rd-panel {
+    display: none;
+  }
+
+  .rd-app[data-sidebar="false"] .rd-content[data-panel="true"] .rd-tpane {
+    margin-right: 8px;
+  }
+
+  .rd-app[data-sidebar="false"] .rd-content[data-tasks="true"][data-panel="true"] .rd-toasts {
+    right: calc(var(--rd-tasks-pane-w) + 26px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rd-tdot--running {
+    animation: none !important;
+  }
+
+  .rd-tpane {
+    animation: none;
+  }
+}

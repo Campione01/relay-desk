@@ -1,0 +1,6 @@
+{
+  "name": "relay-native-bridge",
+  "version": "0.1.0",
+  "author": { "name": "Relay Desk" },
+  "description": "Session-scoped, interactive-only bridge between Relay Desk and the Claude Code sessions it starts"
+}

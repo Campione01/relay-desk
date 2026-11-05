@@ -1,0 +1,6 @@
+{
+  "name": "relay-desk-handoff",
+  "version": "0.1.0",
+  "description": "Adds a button and a /relay command that continue the current session in Relay Desk",
+  "author": { "name": "Relay Desk" }
+}

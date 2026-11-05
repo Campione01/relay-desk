@@ -1,0 +1,972 @@
+/* Transcript column (§4.3-§4.9). */
+.rd-session {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rd-scroller {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.rd-transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 0 40px;
+  user-select: text;
+}
+
+.rd-transcript > * {
+  animation: rd-fade-in 150ms ease-out;
+}
+
+.rd-transcript__note {
+  padding: 0 6px;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+/* "Load earlier messages": one quiet centred row; loading and the error keep its height, so nothing below moves. */
+.rd-earlier {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 24px;
+  padding: 0 6px;
+}
+
+.rd-earlier__btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+  white-space: nowrap;
+}
+
+.rd-earlier__btn:hover:not([aria-disabled="true"]) {
+  background: var(--rd-bg-hover);
+  color: var(--rd-text-secondary);
+}
+
+.rd-earlier__btn[aria-disabled="true"]:not([aria-busy="true"]) {
+  color: var(--rd-text-disabled);
+}
+
+.rd-earlier__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-danger-text);
+}
+
+.rd-earlier__text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-assistant {
+  padding: 0 6px;
+}
+
+/* User message (§4.4) */
+.rd-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.rd-user__bubble {
+  max-width: 80%;
+  padding: 6px 12px;
+  border-radius: var(--rd-r-12);
+  background: var(--rd-bg-user-bubble);
+  color: var(--rd-text-primary);
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-user[data-queued="true"] .rd-user__bubble {
+  opacity: 0.75;
+}
+
+.rd-user__images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.rd-user__queued {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.rd-user__sendnow {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+  border-radius: var(--rd-r-4);
+  padding: 0 2px;
+}
+
+.rd-user__sendnow:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Tool-activity summary line (§4.6) */
+.rd-tools__line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 56px;
+}
+
+.rd-tools__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  max-width: 100%;
+  padding: 0 6px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+  text-align: left;
+  transition: color 100ms ease-out;
+}
+
+.rd-tools__summary:hover {
+  color: var(--rd-text-secondary);
+}
+
+.rd-tools__text {
+  min-width: 0;
+}
+
+/* The last line of a running turn stays one line, so a new step never changes its height. */
+.rd-tools[data-live="true"] .rd-tools__summary {
+  min-width: 0;
+}
+
+.rd-tools[data-live="true"] .rd-tools__text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-tools__elapsed {
+  flex: none;
+  color: var(--rd-text-faint, var(--rd-text-muted));
+}
+
+.rd-tools__chev {
+  flex: none;
+  margin-left: -1px;
+}
+
+.rd-thumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex: none;
+}
+
+/* Image thumbnails (U3): small and rounded on tool lines, larger under user messages (desktop-light-01/05). */
+.rd-imgthumb {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+  border-radius: var(--rd-r-4);
+  background: var(--rd-bg-inset);
+  box-shadow: inset 0 0 0 1px var(--rd-border);
+  color: var(--rd-icon-muted);
+  cursor: zoom-in;
+}
+
+.rd-imgthumb--tool {
+  width: 37px;
+  height: 23px;
+}
+
+.rd-imgthumb--user {
+  height: 144px;
+  min-width: 96px;
+  max-width: 240px;
+  border-radius: var(--rd-r-8);
+}
+
+.rd-imgthumb[data-state="missing"] {
+  cursor: default;
+}
+
+.rd-imgthumb--user[data-state="loading"] {
+  width: 192px;
+}
+
+.rd-imgthumb--user[data-state="missing"] {
+  width: 72px;
+  height: 48px;
+  min-width: 0;
+}
+
+.rd-imgthumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rd-imgthumb--user img {
+  width: auto;
+  max-width: 240px;
+}
+
+.rd-imgthumb[data-state="loaded"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}
+
+.rd-imgthumb[data-state="loaded"]:hover::after {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.rd-imgthumb:focus-visible {
+  box-shadow:
+    0 0 0 1px var(--rd-focus-ring),
+    0 0 0 4px var(--rd-focus-halo);
+}
+
+/* Diff chip (§4.6) */
+.rd-diffchip {
+  display: inline-flex;
+  height: 16px;
+  border-radius: var(--rd-r-4);
+  overflow: hidden;
+  font-size: var(--rd-fs-11);
+  line-height: var(--rd-lh-16);
+  font-weight: 500;
+  flex: none;
+}
+
+.rd-diffchip__add {
+  padding: 0 4px;
+  background: var(--rd-diff-add-bg);
+  color: var(--rd-diff-add-fg);
+}
+
+.rd-diffchip__del {
+  padding: 0 4px;
+  background: var(--rd-diff-del-bg);
+  color: var(--rd-diff-del-fg);
+}
+
+/* Expanded tool card (§4.7) */
+.rd-toolcard {
+  margin-top: 6px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-card);
+  overflow: hidden;
+}
+
+.rd-toolrow + .rd-toolrow {
+  border-top: 1px solid var(--rd-border-subtle);
+}
+
+.rd-toolrow__line {
+  display: flex;
+  align-items: center;
+  transition: background-color 100ms ease-out;
+}
+
+.rd-toolrow__line:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-toolrow__line > .rd-thumbs {
+  padding-right: 9px;
+}
+
+.rd-toolrow__head {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 9px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+  text-align: left;
+  border-radius: 0;
+  transition: background-color 100ms ease-out;
+}
+
+.rd-toolrow__head:focus-visible {
+  border-radius: var(--rd-r-6);
+}
+
+.rd-toolrow[data-nested="true"] .rd-toolrow__head {
+  padding-left: 26px;
+}
+
+.rd-toolrow__summary {
+  min-width: 0;
+}
+
+.rd-toolrow__status {
+  color: var(--rd-danger-text);
+  margin-left: 2px;
+}
+
+.rd-toolrow[data-status="denied"] .rd-toolrow__status {
+  color: var(--rd-text-secondary);
+}
+
+.rd-toolrow[data-status="error"] .rd-toolrow__chev {
+  color: var(--rd-danger-text);
+}
+
+.rd-toolrow__chev {
+  flex: none;
+}
+
+.rd-toolrow__body {
+  display: grid;
+  gap: 6px;
+  padding: 2px 9px 9px;
+}
+
+.rd-toolrow[data-nested="true"] .rd-toolrow__body {
+  padding-left: 26px;
+}
+
+.rd-toolrow__error {
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-danger-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-params {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+
+.rd-params__row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rd-params__key {
+  flex: none;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+.rd-params__value {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-params__value.rd-mono {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-toolrow__output {
+  margin: 0;
+  max-height: 240px;
+  overflow: auto;
+  padding: 8px 10px;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Diff blocks (§4.7, also used by the permission card) */
+.rd-diff {
+  margin: 0;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-8);
+  overflow: hidden;
+  background: var(--rd-bg-input);
+}
+
+.rd-diff__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--rd-border-subtle);
+  background: var(--rd-bg-inset);
+}
+
+.rd-diff__path {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: left;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+.rd-diff__stats {
+  flex: none;
+  font-size: var(--rd-fs-12);
+}
+
+.rd-diff__plus {
+  color: var(--rd-diff-add-fg);
+}
+
+.rd-diff__minus {
+  color: var(--rd-diff-del-fg);
+}
+
+.rd-diff__body {
+  max-height: 260px;
+  overflow: auto;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-diff__line {
+  display: grid;
+  grid-template-columns: 40px 16px 1fr;
+  color: var(--rd-text-primary);
+}
+
+.rd-diff__no {
+  padding-right: 8px;
+  text-align: right;
+  color: var(--rd-text-faint);
+  user-select: none;
+}
+
+.rd-diff__mark {
+  color: var(--rd-text-faint);
+  user-select: none;
+}
+
+.rd-diff__text {
+  padding-right: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-diff__line--add {
+  background: var(--rd-diff-line-add-bg);
+}
+
+.rd-diff__line--add .rd-diff__no,
+.rd-diff__line--add .rd-diff__mark {
+  color: var(--rd-diff-lineno-add);
+}
+
+.rd-diff__line--del {
+  background: var(--rd-diff-line-del-bg);
+}
+
+.rd-diff__line--del .rd-diff__no,
+.rd-diff__line--del .rd-diff__mark {
+  color: var(--rd-diff-lineno-del);
+}
+
+.rd-diff__gap {
+  padding: 1px 10px;
+  text-align: center;
+  color: var(--rd-text-faint);
+  background: var(--rd-bg-inset);
+  user-select: none;
+}
+
+/* Thinking rows */
+.rd-thinking__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 0 6px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+}
+
+.rd-thinking__head:hover {
+  color: var(--rd-text-secondary);
+}
+
+.rd-thinking--card .rd-thinking__head {
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 9px;
+  border-radius: 0;
+}
+
+.rd-thinking__body {
+  margin: 4px 6px 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--rd-border);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* About 12 lines; longer thinking scrolls inside instead of pushing the transcript. */
+  max-height: calc(12 * var(--rd-lh-20));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.rd-thinking[data-streaming='true'] .rd-thinking__label {
+  animation: rd-pulse 1.6s ease-in-out infinite;
+}
+
+.rd-thinking--card .rd-thinking__body {
+  margin: 0 9px 9px;
+}
+
+/* System, result, error and hand-off rows */
+.rd-sysrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 6px;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+}
+
+.rd-sysrow svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+/* Long unbroken commands and paths wrap inside the column instead of running under the right panel. */
+.rd-sysrow > span,
+.rd-sysrow__body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rd-sysrow__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.rd-sysrow__text {
+  white-space: pre-line;
+}
+
+.rd-sysrow__text[data-folded] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* A command's duration: muted at every level and left out when the output is copied. */
+.rd-sysrow__duration {
+  color: var(--rd-text-muted);
+  user-select: none;
+}
+
+/* Folded output: the duration follows "Show more" instead of the clamped text. */
+.rd-sysrow__foot {
+  display: flex;
+  align-items: baseline;
+}
+
+.rd-sysrow__foot .rd-sysrow__duration {
+  white-space: pre;
+}
+
+.rd-sysrow__task {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-sysrow__more {
+  margin-top: 2px;
+  margin-left: -2px;
+}
+
+.rd-sysrow--warn {
+  color: var(--rd-warning-badge-fg);
+}
+
+.rd-sysrow--error {
+  color: var(--rd-danger-text);
+}
+
+.rd-errrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--rd-danger-text) 25%, transparent);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-danger-bg);
+  color: var(--rd-danger-text);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-errrow__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rd-errrow__retry {
+  height: 24px;
+  padding: 0 8px;
+}
+
+/* Plan card (§4.8) */
+.rd-plan {
+  padding: 14px 16px 12px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-card);
+}
+
+.rd-plan__head {
+  margin-bottom: 4px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-plan__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rd-plan__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-primary);
+}
+
+.rd-plan__item svg {
+  flex: none;
+}
+
+.rd-plan__item--pending svg {
+  color: var(--rd-text-faint);
+}
+
+.rd-plan__item--in_progress svg {
+  color: var(--rd-text-primary);
+}
+
+.rd-plan__item--completed,
+.rd-plan__item--completed svg {
+  color: var(--rd-text-muted);
+}
+
+/* Status line (§4.9) */
+.rd-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 24px;
+  padding: 0 6px;
+  margin-top: 8px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-muted);
+}
+
+.rd-status__step {
+  color: var(--rd-text-secondary);
+}
+
+.rd-status__tokens {
+  margin-left: 6px;
+  color: var(--rd-text-muted);
+}
+
+/* Running background work under the latest content (desktop parity); a click unfolds the running tasks. */
+.rd-running {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.rd-running__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  padding: 0 6px;
+  border-radius: var(--rd-r-6);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+.rd-running__head:hover,
+.rd-running[data-open="true"] .rd-running__head {
+  color: var(--rd-text-secondary);
+}
+
+.rd-running__head:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-running__list {
+  align-self: stretch;
+  margin-top: 4px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-card);
+}
+
+.rd-jump {
+  position: sticky;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  height: 28px;
+  margin: -28px auto 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  font-size: var(--rd-fs-13);
+  color: var(--rd-text-secondary);
+}
+
+.rd-jump:hover {
+  color: var(--rd-text-primary);
+}
+
+/* Image viewer (U3, desktop-light-08) */
+.rd-imgview {
+  --rd-imgview-x: 72px;
+  --rd-imgview-y: 112px;
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  background: var(--rd-viewer-veil);
+  color: var(--rd-viewer-fg);
+  animation: rd-fade-in 140ms ease-out;
+  -webkit-app-region: no-drag;
+  user-select: none;
+}
+
+.rd-imgview__stage {
+  position: absolute;
+  inset: var(--rd-imgview-y) var(--rd-imgview-x);
+  display: grid;
+  place-items: center;
+}
+
+.rd-imgview__img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--rd-r-14);
+  visibility: hidden;
+}
+
+/* Largest size that keeps the whole image inside the stage, also for images smaller than the stage. */
+.rd-imgview__img[data-fitted="true"] {
+  width: min(calc(100vw - 2 * var(--rd-imgview-x)), calc((100vh - 2 * var(--rd-imgview-y)) * var(--rd-img-ratio)));
+  height: auto;
+  max-width: none;
+  max-height: none;
+  visibility: visible;
+}
+
+.rd-imgview__missing {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-viewer-fg);
+}
+
+.rd-imgview__close {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rd-r-8);
+  color: var(--rd-viewer-fg);
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.rd-imgview__close:hover,
+.rd-imgview__nav:hover:not([aria-disabled="true"]) {
+  background: var(--rd-viewer-hover);
+  color: var(--rd-viewer-fg-strong);
+}
+
+.rd-imgview__source {
+  position: absolute;
+  left: 16px;
+  bottom: 42px;
+  max-width: calc(50vw - 120px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: calc(16px * var(--rd-font-scale));
+  line-height: var(--rd-lh-20);
+  color: var(--rd-viewer-fg);
+}
+
+.rd-imgview__pager {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+}
+
+.rd-imgview__count {
+  min-width: 52px;
+  text-align: center;
+  font-size: calc(16px * var(--rd-font-scale));
+  line-height: var(--rd-lh-20);
+  color: var(--rd-viewer-fg);
+  white-space: nowrap;
+}
+
+.rd-imgview__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--rd-r-8);
+  color: var(--rd-viewer-fg-strong);
+  transition: background-color 120ms ease-out;
+}
+
+.rd-imgview__nav[aria-disabled="true"] {
+  color: var(--rd-viewer-fg-off);
+}
+
+/* Selection pill (desktop "Start a side chat | Reply") */
+.rd-selmenu {
+  position: fixed;
+  z-index: 58;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 3px;
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-elevated);
+  box-shadow: var(--rd-shadow-popover);
+  color: var(--rd-text-primary);
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-app-region: no-drag;
+  animation: rd-fade-in 100ms ease-out;
+}
+
+.rd-selmenu__btn {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--rd-r-6);
+  color: var(--rd-text-primary);
+}
+
+.rd-selmenu__btn:hover:not([aria-disabled='true']) {
+  background: var(--rd-bg-hover);
+}
+
+.rd-selmenu__btn[aria-disabled='true'] {
+  color: var(--rd-text-disabled);
+  cursor: default;
+}
+
+.rd-selmenu__divider {
+  flex: none;
+  width: 1px;
+  height: 14px;
+  background: var(--rd-border);
+}

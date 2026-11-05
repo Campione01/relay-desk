@@ -1,0 +1,809 @@
+/* Take-over banner (§6.4), permission and question cards (§4.18), dialogs' content, settings, shortcut editor. */
+.rd-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--rd-banner-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-banner-bg);
+  color: var(--rd-banner-fg);
+  animation: rd-slide-up 160ms var(--rd-ease);
+}
+
+@keyframes rd-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.rd-banner__icon {
+  color: var(--rd-banner-icon);
+  flex: none;
+}
+
+.rd-banner__title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  font-weight: 600;
+}
+
+.rd-banner .rd-btn {
+  flex: none;
+}
+
+.rd-readonly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 6px;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+  text-align: center;
+}
+
+/* Automatic continue at usage limit: one compact line above the shortcut bar. */
+.rd-autocont {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 4px 4px 4px 12px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-inset);
+  color: var(--rd-text-secondary);
+  animation: rd-slide-up 160ms var(--rd-ease);
+}
+
+.rd-autocont__icon {
+  flex: none;
+  color: var(--rd-warning-dot);
+}
+
+.rd-autocont__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-autocont__btn {
+  flex: none;
+}
+
+.rd-autocont__btn + .rd-autocont__btn {
+  margin-left: -4px;
+}
+
+/* Startup output is transient plain text, with the same card treatment as native requests. */
+.rd-session[data-opening="true"] {
+  min-height: 0;
+}
+
+/* Keep history mounted, but give startup the room needed to read its native choices. */
+.rd-session[data-opening="true"] > .rd-scroller {
+  display: none;
+}
+
+.rd-session[data-opening="true"] > .rd-bottom {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding-top: 16px;
+}
+
+.rd-session[data-opening="true"] .rd-bottom__stack {
+  flex: 1;
+  min-height: 0;
+}
+
+.rd-session[data-opening="true"] .rd-bottom__stack > :not(.rd-startup) {
+  flex: none;
+}
+
+.rd-startup {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 10px;
+  overflow: hidden;
+  padding: 14px 16px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-card);
+}
+
+.rd-startup__hint,
+.rd-startup__error {
+  margin: 0;
+  color: var(--rd-text-secondary);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-startup__screen {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  color: var(--rd-text-primary);
+  font-family: var(--rd-font-mono);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-startup__screen:focus-visible {
+  outline: 2px solid var(--rd-focus-ring);
+  outline-offset: 2px;
+}
+
+.rd-startup > :not(.rd-startup__screen) {
+  flex: none;
+}
+
+.rd-startup__footer {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.rd-startup__keys,
+.rd-startup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rd-startup__actions {
+  justify-content: flex-end;
+}
+
+/* Permission and question cards */
+.rd-perm,
+.rd-question {
+  display: grid;
+  gap: 8px;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+  background: var(--rd-bg-card);
+  animation: rd-slide-up 160ms var(--rd-ease);
+}
+
+:root:not([data-theme="dark"]) .rd-perm,
+:root:not([data-theme="dark"]) .rd-question {
+  background: var(--rd-bg-input);
+}
+
+.rd-perm__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rd-perm__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rd-warning-dot);
+  flex: none;
+}
+
+.rd-perm__heading {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 600;
+  color: var(--rd-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.rd-perm__sub {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-muted);
+}
+
+.rd-perm__detail {
+  margin: 0;
+  max-height: 160px;
+  overflow: auto;
+  padding: 8px 12px;
+  border-radius: var(--rd-r-6);
+  background: var(--rd-bg-inset);
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-20);
+  color: var(--rd-text-primary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rd-perm .rd-diff__path {
+  color: var(--rd-text-primary);
+}
+
+/* Workflow approval (desktop parity): phases, a usage caution, the script on request. */
+.rd-perm__workflow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.rd-perm__phases {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rd-perm__phase {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rd-perm__phase-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--rd-border);
+  border-radius: 50%;
+  font-size: var(--rd-fs-11);
+  line-height: 1;
+  color: var(--rd-text-muted);
+}
+
+.rd-perm__phase-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rd-perm__phase-title {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.rd-perm__phase-detail {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.rd-perm__caution {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-secondary);
+}
+
+.rd-perm__caution > svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--rd-warning-glyph);
+}
+
+.rd-perm__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-self: stretch;
+  margin: 0;
+}
+
+.rd-perm__fact {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+}
+
+.rd-perm__fact > dt {
+  flex: none;
+  color: var(--rd-text-muted);
+}
+
+.rd-perm__fact > dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--rd-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.rd-perm__args {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.rd-perm__label {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-perm__script-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rd-perm__script {
+  align-self: stretch;
+  max-height: 220px;
+}
+
+.rd-perm__script[hidden] {
+  display: none;
+}
+
+/* A workflow card can outgrow its box (arguments, the script): its buttons stay in view, as on the question card. */
+.rd-perm[data-workflow="true"] > .rd-perm__actions,
+.rd-question > .rd-perm__actions {
+  position: sticky;
+  bottom: -14px;
+  margin: 0 -16px -14px;
+  padding: 8px 16px 14px;
+  background: inherit;
+}
+
+.rd-perm__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.rd-perm__spacer {
+  flex: 1;
+}
+
+.rd-question__block {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.rd-question__sep {
+  height: 1px;
+  background: var(--rd-border-subtle);
+}
+
+.rd-question__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 600;
+  color: var(--rd-text-primary);
+}
+
+.rd-question__options {
+  display: grid;
+  gap: 1px;
+}
+
+.rd-qopt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 30px;
+  padding: 4px 8px;
+  border-radius: var(--rd-r-6);
+  transition: background-color 100ms ease-out;
+}
+
+.rd-qopt:hover {
+  background: var(--rd-bg-hover);
+}
+
+.rd-qopt[data-checked] {
+  background: var(--rd-bg-active);
+}
+
+.rd-qopt input {
+  margin: 0;
+  flex: none;
+  accent-color: var(--rd-info);
+}
+
+.rd-qopt:has(input:focus-visible) {
+  box-shadow:
+    0 0 0 1px var(--rd-focus-ring),
+    0 0 0 4px var(--rd-focus-halo);
+}
+
+.rd-qopt input:focus-visible {
+  box-shadow: none;
+}
+
+.rd-qopt__text {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  min-width: 0;
+}
+
+.rd-qopt__label {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-qopt[data-checked] .rd-qopt__label {
+  font-weight: 500;
+}
+
+.rd-qopt__desc {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-question__other {
+  margin: 2px 0 4px 31px;
+  width: calc(100% - 31px);
+}
+
+.rd-question__preview {
+  max-height: 200px;
+  overflow: auto;
+  padding: 8px 12px;
+  border-radius: var(--rd-r-8);
+  background: var(--rd-bg-inset);
+}
+
+/* Dialog content helpers */
+.rd-dialog__icon {
+  margin-top: 2px;
+  flex: none;
+}
+
+.rd-prewrap {
+  white-space: pre-wrap;
+}
+
+.rd-kv {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 16px;
+  margin: 0;
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+}
+
+.rd-kv dt {
+  color: var(--rd-text-muted);
+}
+
+.rd-kv dd {
+  margin: 0;
+  color: var(--rd-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.rd-kv__pair {
+  display: contents;
+}
+
+.rd-kv--keys {
+  gap: 8px 20px;
+}
+
+.rd-kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--rd-border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--rd-r-4);
+  background: var(--rd-bg-inset);
+  font-family: var(--rd-font-mono);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-secondary);
+  white-space: nowrap;
+}
+
+.rd-takeover__warn {
+  padding: 8px 12px;
+  border: 1px solid var(--rd-banner-border);
+  border-radius: var(--rd-r-8);
+  background: var(--rd-banner-bg);
+  color: var(--rd-banner-fg);
+}
+
+.rd-takeover__quote {
+  margin: 0;
+  max-height: 120px;
+  overflow: auto;
+  padding: 6px 12px;
+  border-left: 2px solid var(--rd-border-strong);
+  color: var(--rd-text-secondary);
+  white-space: pre-wrap;
+}
+
+/* Settings */
+.rd-settings__section {
+  display: grid;
+}
+
+.rd-settings__section + .rd-settings__section {
+  margin-top: 12px;
+}
+
+.rd-settings__heading {
+  margin: 0 0 4px;
+  font-size: var(--rd-fs-14);
+  line-height: var(--rd-lh-20);
+  font-weight: 600;
+  color: var(--rd-text-primary);
+}
+
+.rd-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rd-border-subtle);
+}
+
+.rd-setting__text {
+  display: grid;
+  min-width: 0;
+}
+
+.rd-setting__label {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-setting__hint {
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-settings__section > .rd-setting__hint {
+  margin-top: 8px;
+}
+
+.rd-setting__control {
+  flex: none;
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rd-setting__control .rd-input,
+.rd-setting__control .rd-select {
+  width: 220px;
+}
+
+/* Shortcut editor */
+.rd-slist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-r-10);
+}
+
+.rd-slist__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 6px 4px 12px;
+}
+
+.rd-slist__row + .rd-slist__row {
+  border-top: 1px solid var(--rd-border-subtle);
+}
+
+.rd-slist__empty {
+  padding: 12px;
+  color: var(--rd-text-muted);
+}
+
+.rd-slist__main {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.rd-slist__label {
+  font-size: var(--rd-fs-13);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-primary);
+}
+
+.rd-slist__detail {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-16);
+  color: var(--rd-text-muted);
+}
+
+.rd-slist__tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rd-slist__confirm {
+  height: 24px;
+  padding: 0 8px;
+}
+
+.rd-sform {
+  display: grid;
+  gap: 12px;
+}
+
+.rd-sform__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rd-sform__modes {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.rd-sform__modes:disabled {
+  opacity: 0.6;
+}
+
+.rd-sform__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.rd-kv dd.rd-mono {
+  font-size: var(--rd-fs-12);
+}
+.rd-context-details {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.rd-context-details dd {
+  margin: 0;
+}
+
+.rd-context-path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  user-select: text;
+}
+
+.rd-memory-file,
+.rd-memory-files {
+  margin-top: 8px;
+}
+
+.rd-memory-file .rd-context-path {
+  display: block;
+}
+
+
+/* MCP import / manage dialog (U7) */
+.rd-mcp__callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--rd-banner-border);
+  border-radius: var(--rd-r-8);
+  background: var(--rd-banner-bg);
+  color: var(--rd-banner-fg);
+}
+
+.rd-mcp__callout svg {
+  margin-top: 2px;
+  color: var(--rd-banner-icon);
+}
+
+.rd-mcp__warnings {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--rd-warning-badge-fg);
+}
+
+.rd-mcp__row {
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 8px 8px 12px;
+}
+
+.rd-mcp__pick {
+  display: inline-flex;
+  padding-top: 2px;
+}
+
+.rd-mcp__pick input {
+  margin: 0;
+  accent-color: var(--rd-info);
+}
+
+.rd-mcp__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.rd-mcp__cmd {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--rd-font-mono);
+  font-size: var(--rd-fs-12);
+  line-height: var(--rd-lh-18);
+  color: var(--rd-text-secondary);
+}
+
+.rd-mcp__row .rd-toggle {
+  margin-top: 2px;
+}
+
+.rd-mcp__actions {
+  display: flex;
+  justify-content: flex-end;
+}

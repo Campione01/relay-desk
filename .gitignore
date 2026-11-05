@@ -1,0 +1,26 @@
+# Build outputs and local state, at the repository root only (tools/release/ is source).
+# No trailing slash on node_modules: to Git a linked node_modules is not a folder.
+/node_modules
+/out/
+/dist/
+/release/
+/coverage/
+/.cache/
+/.tmp/
+*.log
+# Helpers are built from source.
+/tools/native/bin/
+/tools/private-storage/bin/
+/tools/auth/bin/
+/tools/native-mcp-facade/OwnedMcpJob.exe
+# Mod declarations are written by Claude Code (Anthropic's text) and generated locally.
+/native-mod/types/
+/native-mod/.claude-plugin/types/
+/src/main/native/generated/
+# Optional PDF tools supplied by the builder, and the local CLI install record.
+/resources/pdf-tools/
+/.relay-cli.json
+/.relay-cli.json.relay-partial
+# Written by the maintainers' export tool.
+/.export-manifest.json
+/.export-manifest.json.partial

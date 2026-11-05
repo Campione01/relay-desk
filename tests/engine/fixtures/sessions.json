@@ -1,0 +1,26 @@
+[
+  {
+    "sessionId": "aaaaaaaa-1111-4111-8111-111111111111",
+    "summary": "Auto summary A",
+    "customTitle": "Desktop title A",
+    "lastModified": 1000,
+    "cwd": "D:\\work\\alpha",
+    "gitBranch": "main",
+    "firstPrompt": "Set up the project",
+    "fileSize": 2048,
+    "createdAt": 500,
+    "tag": "wip"
+  },
+  {
+    "sessionId": "bbbbbbbb-2222-4222-8222-222222222222",
+    "summary": "Summary B",
+    "lastModified": 3000
+  },
+  {
+    "sessionId": "cccccccc-3333-4333-8333-333333333333",
+    "summary": "   ",
+    "firstPrompt": "First prompt C",
+    "lastModified": 2000,
+    "cwd": "D:\\work\\gamma"
+  }
+]

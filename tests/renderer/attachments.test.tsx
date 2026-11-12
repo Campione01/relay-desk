@@ -92,6 +92,26 @@ describe('pasted and dropped media (R4-paste)', () => {
     expect(box).toHaveValue('first');
   });
 
+  it('"/" text with a file is refused with a note that keeps the text and the file; a drive path goes out without its "/"', async () => {
+    const { api, box, controller, handleId, user } = await ready();
+    const send = vi.spyOn(api.engine, 'send');
+    const key = controller.state.currentKey!;
+    fireEvent.paste(box, clipboard([png()]));
+    await waitFor(() => expect(chips()).toHaveLength(1));
+    act(() => controller.setDraft(key, '/tmp/x please read'));
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+    expect(await screen.findByText("A message can't start with “/”: the CLI treats it as a command. Remove the leading “/” to send it as a message.")).toBeInTheDocument();
+    expect(send).not.toHaveBeenCalled();
+    expect(chips()).toHaveLength(1);
+    expect(box).toHaveValue('/tmp/x please read');
+    act(() => controller.setDraft(key, '/E:/x/REPORT.md'));
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+    await waitFor(() => expect(send).toHaveBeenCalledWith(handleId, 'E:/x/REPORT.md', {
+      attachments: [{ kind: 'image', mediaType: 'image/png', data: b64('PNGDATA'), name: 'shot.png' }],
+    }));
+    await waitFor(() => expect(screen.queryByTestId('prompt-attachments')).not.toBeInTheDocument());
+  });
+
   it('keeps attachments per view when the user switches views', async () => {
     const rendered = await ready();
     const { box, user, controller } = rendered;

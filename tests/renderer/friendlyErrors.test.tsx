@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { translate } from '../../src/renderer/i18n';
 import { friendlyError } from '../../src/renderer/lib/errors';
 import { errorText } from '../../src/renderer/lib/format';
+import { SLASH_TEXT_REFUSAL } from '@shared/slashText';
 import { renderApp, takeOverMain } from './helpers';
 
 const ipc = (message: string): Error => new Error(`Error invoking remote method 'relay:engine:send': Error: ${message}`);
@@ -22,6 +23,11 @@ describe('friendly error text', () => {
     ['Native control gate [settings.effort]: a prior native modal failed; input recovery is required before another send or control. Background work has not been stopped.', 'error.dialogOpen'],
     ['Native control gate [settings.model]: native UI did not reach the attested expected state before its deadline. [Local UI diagnostic v1: phase=wait]', 'error.notApplied'],
     ['/tui is handled by Relay, not the native CLI.', 'slash.terminalOnly'],
+    [SLASH_TEXT_REFUSAL, 'slash.leadingSlash'],
+    ['Native control gate [prompt.slash]: text that starts with "/" would run as a command; the native host refuses it as a model prompt.', 'slash.leadingSlash'],
+    ['Queued native send abc was not delivered: Native control gate [prompt.slash]: text that starts with "/" would run as a command.', 'slash.leadingSlash'],
+    ['Native control gate [prompt.command]: slash commands need the native command dispatcher, not a model prompt.', 'error.notApplied'],
+    ['Attachment text contains unsafe terminal controls or a terminal command.', 'attach.unsafeText'],
   ] as const)('%s', (message, key) => {
     expect(friendlyError(errorText(ipc(message)))?.key).toBe(key);
   });
@@ -52,6 +58,19 @@ describe('error banner and toast', () => {
     await rendered.user.click(within(details).getByText('Details'));
     expect(details).toHaveAttribute('open');
     expect(within(banner).getByRole('button', { name: 'Send again' })).toBeInTheDocument();
+  });
+
+  it('a "!" text with a file that main refuses reads as a translated note, the raw text under Details', async () => {
+    const rendered = await renderApp();
+    await takeOverMain(rendered);
+    const reason = 'Attachment text contains unsafe terminal controls or a terminal command.';
+    vi.spyOn(rendered.api.engine, 'send').mockRejectedValueOnce(ipc(reason));
+    await act(async () => { await rendered.controller.send(rendered.controller.state.currentKey!, '!ls', false,
+      [{ kind: 'image', mediaType: 'image/png', data: 'iVBORw0KGgo=' }]); });
+    const banner = screen.getByTestId('inline-error');
+    expect(within(banner).getByText("A message with files can't start with “!” or contain hidden control characters. Remove them to send it.")).toBeInTheDocument();
+    expect(banner.querySelector('details')).toHaveTextContent(reason);
+    expect(translate('zh-TW', 'attach.unsafeText')).toBe('附有檔案的訊息不能以「!」開頭，也不能含有隱藏的控制字元。請移除後再送出。');
   });
 
   it('a fatal exit event says the CLI session ended and still offers Reopen; an unknown one stays as it came', async () => {

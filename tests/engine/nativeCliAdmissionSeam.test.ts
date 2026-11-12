@@ -35,7 +35,9 @@ function seamBypasses(name: string, text: string): string[] {
 
 describe('fixture admission seam for a staged CLI build', () => {
   it('lists the stable build first and then the latest build', () => {
-    expect(NATIVE_CLI_BUILDS.map((build) => build.version)).toEqual(['2.1.311', '2.1.318']);
+    expect(NATIVE_CLI_BUILDS.map((build) => build.version)).toEqual(['2.1.311', '2.1.322']);
+    expect(NATIVE_CLI_BUILDS.map((build) => build.sha256)).toEqual(['966f4b2ce962298f5dee6a942e8c47c8f97392e69e728e622319a98b259c0680',
+      '345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298']);
     expect(Object.isFrozen(NATIVE_CLI_BUILDS) && NATIVE_CLI_BUILDS.every((build) => Object.isFrozen(build))).toBe(true);
     for (const build of NATIVE_CLI_BUILDS) {
       expect(nativeCliBuild(build.sha256.toUpperCase())).toBe(build);

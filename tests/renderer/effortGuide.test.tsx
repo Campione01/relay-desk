@@ -24,7 +24,7 @@ const FABLE_GUIDE: EffortGuide = {
 };
 const NATIVE: ModelOption[] = [
   { value: 'opus', label: 'Opus 5.5', catalogSource: 'native-config', equivalentValues: ['opus', 'claude-opus-5-5'], effortGuide: OPUS_GUIDE },
-  { value: 'fable', label: 'Fable 5.1', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-1'], effortGuide: FABLE_GUIDE },
+  { value: 'fable', label: 'Fable 5.2', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-2'], effortGuide: FABLE_GUIDE },
   { value: 'opus[1m]', label: 'Opus 5.5 (1M context)', catalogSource: 'native-config', equivalentValues: ['opus[1m]', 'claude-opus-5-5[1m]'] },
   { value: 'provider/custom', label: 'Custom', catalogSource: 'native-config' },
 ];
@@ -39,7 +39,7 @@ describe('effort guide (lib/effortGuide)', () => {
     // opus[1m] is listed without notes of its own; fable[1m] is not listed at all.
     expect(effortGuideFor('claude-opus-5-5[1m]', NATIVE)).toBe(OPUS_GUIDE);
     expect(effortGuideFor('opus[1m]', NATIVE)).toBe(OPUS_GUIDE);
-    expect(effortGuideFor('claude-fable-5-1[1m]', NATIVE)).toBe(FABLE_GUIDE);
+    expect(effortGuideFor('claude-fable-5-2[1m]', NATIVE)).toBe(FABLE_GUIDE);
     const ownNotes: EffortGuide = { levels: { low: { tooltip: 'Own notes' } } };
     expect(effortGuideFor('opus[1m]', NATIVE.map((o) => (o.value === 'opus[1m]' ? { ...o, effortGuide: ownNotes } : o)))).toBe(ownNotes);
 
@@ -57,6 +57,22 @@ describe('effort guide (lib/effortGuide)', () => {
     expect(effortGuideFor(undefined, sdk)).toBeUndefined();
     expect(effortGuideFor('claude-opus-5-5[1m]', sdk)).toBe(OPUS_GUIDE);
     expect(effortGuideFor('default', [{ ...sdk[0]!, effortGuide: FABLE_GUIDE }, sdk[1]!])).toBe(FABLE_GUIDE);
+  });
+
+  it('reads a native family row’s notes by the model the session runs, never another model’s', () => {
+    // fable stands for Fable 5.2 or 5.1 (by build and account); the main process gives the row each model's notes.
+    const FABLE_51: EffortGuide = { description: DESCRIPTION, levels: { medium: { badge: { message: 'Recommended', tone: 'neutral' } } } };
+    const family: ModelOption[] = [NATIVE[0]!, { value: 'fable', label: 'Fable', catalogSource: 'native-config',
+      equivalentValues: ['fable', 'claude-fable-5-2', 'claude-fable-5-1'], effortGuideByModel: { 'claude-fable-5-2': FABLE_GUIDE, 'claude-fable-5-1': FABLE_51 } }];
+    expect(effortGuideFor('claude-fable-5-2', family)).toBe(FABLE_GUIDE);
+    expect(effortGuideFor('claude-fable-5-1', family)).toBe(FABLE_51);
+    expect(effortGuideFor('claude-fable-5-1[1m]', family)).toBe(FABLE_51);
+    expect(effortGuideFor('fable', family)).toBeUndefined();
+    const only52 = family.map((row) => row.value === 'fable' ? { ...row, effortGuideByModel: { 'claude-fable-5-2': FABLE_GUIDE } } : row);
+    expect(effortGuideFor('claude-fable-5-1', only52)).toBeUndefined();
+    // The shared line above the levels counts each model's notes.
+    expect(effortGuideDescription(undefined, family)).toBe(DESCRIPTION);
+    expect(effortGuideDescription(undefined, [family[1]!, { ...NATIVE[0]!, effortGuide: { ...OPUS_GUIDE, description: 'Other' } }])).toBeUndefined();
   });
 
   it('describes the levels with the current model’s line, else the line every model with notes shares', () => {
@@ -263,7 +279,7 @@ describe('the Effort submenu shows the CLI model catalog’s notes', () => {
   it('a model list without notes leaves the levels as they were', async () => {
     const plain: ModelOption[] = [
       { value: 'opus', label: 'Opus 5.5', catalogSource: 'native-config', equivalentValues: ['opus', 'claude-opus-5-5'] },
-      { value: 'fable', label: 'Fable 5.1', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-1'] },
+      { value: 'fable', label: 'Fable 5.2', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-2'] },
     ];
     const { user } = await liveMain((api) => { vi.spyOn(api.engine, 'models').mockResolvedValue(plain); });
     const levels = await openEffort(user);

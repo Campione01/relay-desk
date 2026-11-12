@@ -9,10 +9,22 @@ const EXTENDED = '[1m]';
  * uses its base model's; the CLI default has none unless its own entry carries them.
  */
 export function effortGuideFor(model: string | undefined, models: readonly ModelOption[]): EffortGuide | undefined {
-  const guide = currentModelOption(model, models)?.effortGuide;
+  const guide = notesOf(currentModelOption(model, models), model);
   if (guide || !model?.endsWith(EXTENDED)) return guide;
   const base = model.slice(0, -EXTENDED.length);
-  return models.find((option) => (option.value === base || option.equivalentValues?.includes(base)) && option.effortGuide)?.effortGuide;
+  for (const option of models) {
+    if (option.value !== base && !option.equivalentValues?.includes(base)) continue;
+    const found = notesOf(option, base);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+/** A row's notes for one model: an alias standing for several models has them per model id, never another one's. */
+function notesOf(option: ModelOption | undefined, model: string | undefined): EffortGuide | undefined {
+  const byModel = option?.effortGuideByModel;
+  if (!byModel) return option?.effortGuide;
+  return model !== undefined && Object.prototype.hasOwnProperty.call(byModel, model) ? byModel[model] : undefined;
 }
 
 /**
@@ -21,7 +33,7 @@ export function effortGuideFor(model: string | undefined, models: readonly Model
  */
 export function effortGuideDescription(guide: EffortGuide | undefined, models: readonly ModelOption[]): string | undefined {
   if (guide) return guide.description;
-  const guides = models.flatMap((option) => (option.effortGuide ? [option.effortGuide] : []));
+  const guides = models.flatMap((option) => [...(option.effortGuide ? [option.effortGuide] : []), ...Object.values(option.effortGuideByModel ?? {})]);
   const shared = guides[0]?.description;
   return shared && guides.every((other) => other.description === shared) ? shared : undefined;
 }

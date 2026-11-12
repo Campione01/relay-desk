@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { SDKControlGetUsageResponse, PermissionUpdate } from '@anthropic-ai/claude-agent-sdk';
 import type { EngineEvent, EngineState } from '@shared/events';
+import { SLASH_TEXT_REFUSAL, startsWithSlash, withoutDriveSlash } from '@shared/slashText';
 import {
   EFFORT_LEVELS, PERMISSION_MODES, type ContextUsage, type Effort, type EffortGuide, type EngineHandle,
   type BackgroundTask, type McpServerState, type ModelOption, type NativeFastControl, type PermissionMode, type PromptAttachment, type PlanUsage,
@@ -298,8 +299,12 @@ export class NativeInteractiveSession {
   }
 
   /** Messages wait their turn (also behind a failed control until its dialog is closed); slash commands never stack. */
-  send(text: string, opts: { queue?: boolean; attachments?: readonly PromptAttachment[] } = {}): Promise<void> {
+  send(typed: string, opts: { queue?: boolean; attachments?: readonly PromptAttachment[] } = {}): Promise<void> {
+    // The CLI's copy of the message (with attachments, its prompt-box text) is matched by exact text, so the rewritten
+    // text is the one registered and sent.
+    const text = withoutDriveSlash(typed);
     const command = opts.attachments?.length ? null : SLASH_COMMAND.exec(text.trim());
+    if (!command && startsWithSlash(text)) return Promise.reject(new Error(SLASH_TEXT_REFUSAL));
     // Log in and Log out run the official commands in their own console; the CLI's own sign-in never runs in a session.
     // The CLI runs a listed command of exactly the typed name, letter case included, before an alias; so do the window
     // and the plugin.
@@ -610,7 +615,7 @@ export class NativeInteractiveSession {
       if (!Array.isArray(value)) throw new Error('Native model.list returned no list.');
       // Effort notes come only from Relay's own validated catalog read, never from bridge rows.
       const rows = value.filter((row): row is ModelOption => isRecord(row) && typeof row.value === 'string' && typeof row.label === 'string')
-        .map(({ effortGuide: _bridge, ...row }) => row);
+        .map(({ effortGuide: _bridge, effortGuideByModel: _bridgeByModel, ...row }) => row);
       return withEffortGuides(rows, await guides);
     }
     const list = await this.call('config.list', {});

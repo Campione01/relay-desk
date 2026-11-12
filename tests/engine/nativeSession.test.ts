@@ -12,6 +12,7 @@ import { NativeCapabilityError, NativeInteractiveSession, type NativeInteractive
 import { NativeControlGate, NativeUiWaitTimeout, NATIVE_MCP_PENDING_SETTLE_MS, NATIVE_UI_PINNED_SHA256 } from '../../src/main/native/controls';
 import type { NativeAttachmentComposer, NativeAttachmentGuardStatus, NativeAttachmentStorage } from '../../src/main/native/attachments';
 import type { PrivateFileInfo, PrivateLaunch } from '../../src/main/native/privateStorage';
+import { SLASH_TEXT_REFUSAL } from '@shared/slashText';
 
 vi.mock('@anthropic-ai/claude-agent-sdk', () => { throw new Error('The native adapter must not import the SDK runtime.'); });
 
@@ -175,6 +176,37 @@ describe('native session attachment integration', () => {
     await vi.waitFor(() => expect(h.session.currentState).toBe('closed'));
     expect(h.files.size).toBe(0); expect(h.cleanup).toHaveBeenCalledTimes(1); expect(h.submitted).toHaveLength(1);
   });
+  it('sends a drive path with attachments without its leading "/" and refuses other "/" text before staging any file', async () => {
+    const h = attachmentSession(); await h.session.start();
+    for (const text of ['/tmp/x', '  /compact keep', '/交接', '//c']) {
+      await expect(h.session.send(text, { attachments: [h.image] })).rejects.toThrow(SLASH_TEXT_REFUSAL);
+    }
+    expect(h.storage.createLaunch).not.toHaveBeenCalled(); expect(h.runtime.writeTerminal).not.toHaveBeenCalled();
+    // "!" text keeps the attachment path's own refusal.
+    await expect(h.session.send('!ls', { attachments: [h.image] })).rejects.toThrow('Attachment text contains unsafe terminal controls or a terminal command.');
+    await h.session.send(' \t/E:/x/REPORT.md', { attachments: [h.image] });
+    // The CLI's prompt-box copy carries the image token before the rewritten text and is matched to Relay's send: one row.
+    expect(h.submitted).toEqual(['[Image #1] E:/x/REPORT.md']);
+    const users = h.events.flatMap((event) => event.type === 'item' && event.item.kind === 'user' ? [event.item] : []);
+    expect(users).toHaveLength(1);
+    expect(users[0]).toMatchObject({ id: 'send-1', text: 'E:/x/REPORT.md', images: 1 });
+    expect(h.runtime.request.mock.calls.some(([method]) => method === 'prompt.submit')).toBe(false);
+    await h.session.close();
+  });
+  it('queues a drive path with files behind a running turn as its rewritten text and keeps one row', async () => {
+    const h = attachmentSession(); await h.session.start();
+    h.runtime.emit('turn.start', { turnId: 'running' });
+    await h.session.send('/E:/x', { queue: true, attachments: [h.image] });
+    const users = () => h.events.flatMap((event) => event.type === 'item' && event.item.kind === 'user' ? [event.item] : []);
+    expect(users()).toEqual([expect.objectContaining({ id: 'send-1', text: 'E:/x', queued: true, images: 1 })]);
+    expect(h.submitted).toEqual([]);
+    h.runtime.emit('turn.complete', { turnId: 'running', reason: 'answer' });
+    await vi.waitFor(() => expect(h.submitted).toEqual(['[Image #1] E:/x']));
+    await vi.waitFor(() => expect(users().at(-1)).not.toHaveProperty('queued'));
+    expect(new Set(users().map((item) => item.id))).toEqual(new Set(['send-1']));
+    expect(users().every((item) => item.text === 'E:/x')).toBe(true);
+    await h.session.close();
+  });
 });
 
 function withControls(options: { forcedEffort?: string; fingerprintChange?: boolean; autoCommit?: boolean;
@@ -186,7 +218,7 @@ function withControls(options: { forcedEffort?: string; fingerprintChange?: bool
   const h = setup({}, runtime, { cliSha256: NATIVE_UI_PINNED_SHA256, preferenceFingerprint }, options.attachments);
   const efforts = ['low', 'medium', 'high', 'xhigh', 'max'] as const;
   const models = [{ id: 'claude-opus-5-5', name: 'Opus 5.5', row: 'Opus New Opus 5.5' },
-    { id: 'claude-fable-5-1', name: 'Fable 5.1', row: 'Fable New Fable 5.1' },
+    { id: 'claude-fable-5-2', name: 'Fable 5.2', row: 'Fable New Fable 5.2' },
     { id: 'claude-sonnet-5-5', name: 'Sonnet 5.5', row: 'Sonnet New Sonnet 5.5' },
     { id: 'claude-haiku-5-5', name: 'Haiku 5.5', row: 'Haiku New Haiku 5.5' }];
   let active: 'model' | 'effort' | undefined, effort = 3, model = 0, selectedModel = 0, committed = false;
@@ -577,6 +609,69 @@ describe('native sends and native turn identity', () => {
     expect(h.session.currentState).toBe('idle');
     await h.session.close();
   });
+
+  it('sends a pasted drive path without its leading "/" and refuses other "/" text the native host would refuse', async () => {
+    const h = setup();
+    const promptTexts = () => h.runtime.request.mock.calls.filter(([method]) => method === 'prompt.submit').map(([, args]) => args);
+    const users = () => h.events.flatMap((event) => event.type === 'item' && event.item.kind === 'user' ? [event.item] : []);
+    h.runtime.handler = (method, args) => {
+      if (method !== 'prompt.submit') return undefined;
+      const text = (args as { text: string }).text;
+      if (/^\s*\//.test(text)) {
+        throw new Error('Native transport: relay-native-bridge: prompt.submit: submits a prompt to the model; a text beginning with / would run a command as the user; run one with $.command.run({ command }) (host check)');
+      }
+      h.runtime.emit('turn.start', { turnId: 'path' });
+      h.runtime.emit('session.append', { uuid: 'cli-echo', door: 'prompt', message: { type: 'user', content: [{ type: 'text', text }] } });
+      return { text };
+    };
+    await h.session.start();
+    await expect(h.session.send('/E:/demo-work/project-a/x/REPORT.md')).resolves.toBeUndefined();
+    expect(promptTexts()).toEqual([{ text: 'E:/demo-work/project-a/x/REPORT.md', asUser: true }]);
+    // The CLI's copy is matched to Relay's send by exact text: one row.
+    expect(users()).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/demo-work/project-a/x/REPORT.md' }]);
+    h.runtime.emit('turn.complete', { turnId: 'path', reason: 'answer' }); await settle();
+    for (const text of ['/tmp/a please read', '  /tmp/x.log', '\n/x.y', '/交接', '/ hi', '//c']) {
+      await expect(h.session.send(text)).rejects.toThrow(SLASH_TEXT_REFUSAL);
+      await expect(h.session.send(text, { queue: true })).rejects.toThrow(SLASH_TEXT_REFUSAL);
+    }
+    await settle();
+    expect(promptTexts()).toHaveLength(1);
+    expect(users()).toHaveLength(1);
+    expect(h.events.filter((event) => event.type === 'error')).toEqual([]);
+    await h.session.close();
+  });
+
+  it('queues a drive path behind a running turn as its rewritten text and keeps one row when the CLI copy arrives', async () => {
+    const h = setup();
+    const promptTexts = () => h.runtime.request.mock.calls.filter(([method]) => method === 'prompt.submit').map(([, args]) => args);
+    const users = () => h.events.flatMap((event) => event.type === 'item' && event.item.kind === 'user' ? [event.item] : []);
+    h.runtime.handler = (method, args) => {
+      if (method !== 'prompt.submit') return undefined;
+      const text = (args as { text: string }).text;
+      if (/^\s*\//.test(text)) throw new Error('Native transport: relay-native-bridge: prompt.submit: a text beginning with / would run a command as the user (host check)');
+      h.runtime.emit('turn.start', { turnId: 'queued' });
+      h.runtime.emit('session.append', { uuid: 'cli-echo', door: 'prompt', message: { type: 'user', content: [{ type: 'text', text }] } });
+      return { text };
+    };
+    await h.session.start();
+    h.runtime.emit('turn.start', { turnId: 'running' });
+    await h.session.send('/E:/x/REPORT.md', { queue: true });
+    expect(promptTexts()).toEqual([]);
+    expect(users()).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', queued: true }]);
+    h.runtime.emit('turn.complete', { turnId: 'running', reason: 'answer' }); await settle();
+    expect(promptTexts()).toEqual([{ text: 'E:/x/REPORT.md', asUser: true }]);
+    expect(users()).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', queued: true }, { kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md' }]);
+    await h.session.close();
+  });
+
+  it.each([['/E:foo', 'E:foo', ''], ['  /compact keep', 'compact', 'keep'], ['/E: /x', 'E:', '/x']])(
+    'routes %j to command.run, never to prompt.submit', async (text, command, args) => {
+      const h = setup(); await h.session.start();
+      await h.session.send(text);
+      expect(h.runtime.request).toHaveBeenCalledWith('command.run', { command, args }, expect.anything());
+      expect(h.runtime.request.mock.calls.filter(([method]) => method === 'prompt.submit')).toHaveLength(0);
+      await h.session.close();
+    });
 
   it('preserves the GUI draft on native rejection and permits a later manual retry', async () => {
     const h = setup();

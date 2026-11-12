@@ -152,8 +152,16 @@ export function withEffortGuides(options: readonly ModelOption[], guides: Readon
   return options.map((option) => {
     if (option.value === 'default') return option;
     const equivalents = Array.isArray(option.equivalentValues) ? option.equivalentValues : [];
-    const id = [option.value, ...equivalents].filter((value): value is string => typeof value === 'string')
-      .map((value) => value.replace(LONG_CONTEXT, '')).find((value) => hasOwn(guides, value));
+    const values = [option.value, ...equivalents].filter((value): value is string => typeof value === 'string')
+      .map((value) => value.replace(LONG_CONTEXT, ''));
+    // An alias standing for several models (fable: 5.2 or 5.1 by build and account) has no one set of notes; the
+    // session's actual model picks its own.
+    const models = [...new Set(values.filter((value) => MODEL_ID.test(value)))];
+    if (!MODEL_ID.test(option.value) && models.length > 1) {
+      const byModel = Object.fromEntries(models.filter((id) => hasOwn(guides, id)).map((id) => [id, guides[id]!]));
+      return Object.keys(byModel).length ? { ...option, effortGuideByModel: byModel } : option;
+    }
+    const id = values.find((value) => hasOwn(guides, value));
     return id === undefined ? option : { ...option, effortGuide: guides[id] };
   });
 }

@@ -13,7 +13,7 @@ export const SIGN_IN_REQUIRED = 'This account is not signed in to Claude Code. U
 export const ACCOUNT_COMMANDS: ReadonlySet<string> = new Set(['login', 'logout', 'design-login']);
 
 /**
- * Commands of CLI 2.1.311 and 2.1.318 that can run Claude Code's own sign-in (its login screen, its browser
+ * Commands of CLI 2.1.311 and 2.1.322 that can run Claude Code's own sign-in (its login screen, its browser
  * authorization or a key typed into the CLI), by the name the CLI registers them under; /remote-control and /teleport
  * also answer to rc and tp. The plugin ships without src/, so native-mod/hooks/bridge.ts keeps a copy.
  */
@@ -26,13 +26,13 @@ export function signInCommandRefusal(name: string): string {
     : `Relay Desk does not run Claude Code's own sign-in inside a session. Run /${name} in a terminal.`;
 }
 
-// Rows of the CLI's sign-in screens (CLI 2.1.311 and 2.1.318), whole and spelled as the CLI draws them, once the
+// Rows of the CLI's sign-in screens (CLI 2.1.311 and 2.1.322), whole and spelled as the CLI draws them, once the
 // leading run of spinner frames, bullets, pointers and box edges is dropped. Assistant text that only starts with the
 // same words does not match, nor does an MCP server's own authentication.
 const SIGN_IN_ROWS: readonly RegExp[] = [
   /^Select login method:$/,
   /^How do you want to sign in\?$/,
-  // A login method forced to claude.ai reads "Subscription Plan" in 2.1.311 and "Claude subscription" in 2.1.318.
+  // A login method forced to claude.ai reads "Subscription Plan" in 2.1.311 and "Claude subscription" in 2.1.322.
   /^Login method pre-selected: (?:Subscription Plan \(Claude Pro\/Max\)|Claude subscription \(claude\.ai account\)|API usage billing \(Anthropic Console\))$/,
   /^Starting new login following \/[a-z-]+\. Exit with Ctrl-C to use existing account\.$/,
   /^Sign in to enroll this device for Remote Control\.$/,
@@ -41,7 +41,7 @@ const SIGN_IN_ROWS: readonly RegExp[] = [
   /^Opening browser to sign in(?: with your Claude account)?\u2026$/,
   /^(?:Browser didn't open\? Use the url|Use the URL) below to sign in(?: \([^()]{1,60}\))?$/,
   /^Paste code here(?: if prompted)? >/,
-  // 2.1.311 only: 2.1.318 no longer has this screen.
+  // 2.1.311 only: 2.1.322 no longer has this screen.
   /^Creating API key for Claude Code\u2026$/,
   /^Login successful\. Press Enter to continue\u2026$/,
   // The first-run sign-in when its start failed (a forced login method the organization's settings do not admit).

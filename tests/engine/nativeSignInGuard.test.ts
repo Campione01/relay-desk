@@ -12,7 +12,7 @@ vi.mock('electron', () => ({ app: { getPath: (name: string) => `C:\\Users\\me\\A
 
 const { registerEngineIpc } = await import('../../src/main/engine/ipc');
 
-// Synthetic screens in the shape CLI 2.1.311 and 2.1.318 draw them. Nothing here is a real address or code.
+// Synthetic screens in the shape CLI 2.1.311 and 2.1.322 draw them. Nothing here is a real address or code.
 // The glyphs a row can start with: the spinner's frames on Windows, its Ghostty frame, its reduced-motion dot (also the
 // assistant bullet on Windows), the assistant bullet on macOS and the selection pointer.
 const GLYPHS = ['\u00b7', '\u2722', '*', '\u2736', '\u273b', '\u273d', '\u2733', '\u25cf', '\u23fa', '\u276f'];
@@ -23,9 +23,9 @@ const CLAUDE_AI = address('https://claude.com/cai');
 const SIGN_IN = ['Select login method:', '\u276f 1. Claude account with subscription \u00b7 Pro, Max, Team, or Enterprise', '  2. Anthropic Console account \u00b7 API usage billing'];
 // A setting forces the login method: no selection screen, the browser opens at once and the address follows 3 s later.
 const FORCED = ['Login method pre-selected: Subscription Plan (Claude Pro/Max)', '', '\u273b Opening browser to sign in\u2026'];
-// 2.1.318 words the same forced method differently, and words the option of the selection screen differently too.
-const FORCED_318 = ['Login method pre-selected: Claude subscription (claude.ai account)', '', '\u273b Opening browser to sign in\u2026'];
-const SIGN_IN_318 = ['Select login method:', '\u276f 1. Claude account with subscription \u00b7 Individual, Team, or Enterprise', '  2. Anthropic Console account \u00b7 API usage billing'];
+// 2.1.322 words the same forced method differently, and words the option of the selection screen differently too.
+const FORCED_322 = ['Login method pre-selected: Claude subscription (claude.ai account)', '', '\u273b Opening browser to sign in\u2026'];
+const SIGN_IN_322 = ['Select login method:', '\u276f 1. Claude account with subscription \u00b7 Individual, Team, or Enterprise', '  2. Anthropic Console account \u00b7 API usage billing'];
 const CODE_PROMPT = ['Browser didn\'t open? Use the url below to sign in (c to copy)', '', 'Paste code here if prompted > '];
 // The first-run sign-in when its start failed, e.g. a login method forced by settings the organization does not admit.
 const FIRST_RUN_RETRY = ['OAuth error: Synthetic sign-in failure', '', 'Press Enter to retry. (Esc to continue without logging in)'];
@@ -48,6 +48,8 @@ const GATEWAY_TRUST = [`Trust gateway ${GATEWAY_HOST}?`, '', 'You haven\'t conne
   '', 'Certificate fingerprint (SHA-256): 0123456789abcdef\u2026', '', '  Yes, trust this gateway', '\u276f No, cancel login'];
 const GATEWAY_CODE = ['Cloud gateway \u00b7 sign in', '', 'A browser window should have opened. After signing in with your identity provider, confirm this code on the verification page:',
   '', ...boxed('SYNT-CODE'), '', 'Browser didn\'t open? Visit:', `https://${GATEWAY_HOST}/device`, '', '\u2722 Waiting for sign-in to complete in your browser\u2026', '', 'Press Esc to cancel'];
+// 2.1.322 shows a notice the gateway sends with the device code between the address and the wait row.
+const GATEWAY_CODE_NOTICE = [...GATEWAY_CODE.slice(0, -4), '', `Notice from ${GATEWAY_HOST}:`, 'Synthetic notice: sign in with your work account.', ...GATEWAY_CODE.slice(-4)];
 const GATEWAY_ACCOUNT = ['Signed in to Cloud gateway as someone@example.com', '', 'Continue only if this is your account; that organization\'s settings will then apply to this machine. Otherwise go back: nothing is saved, and you can sign in again.',
   '', '\u276f Yes, continue', '  No, cancel login'];
 const GATEWAY_DONE = ['Connected to Cloud gateway.', '', 'Press Enter to continue.'];
@@ -100,8 +102,8 @@ afterEach(() => { vi.useRealTimers(); });
 describe('the sign-in screens Relay Desk recognises', () => {
   const seen = (rows: string[], columns = COLUMNS) => isSignInScreen(rows, columns);
 
-  it.each([['a sign-in heading', SIGN_IN], ['a sign-in heading with 2.1.318\'s option label', SIGN_IN_318],
-    ['a forced login method before the address appears', FORCED], ['a forced claude.ai login method of 2.1.318 before the address appears', FORCED_318],
+  it.each([['a sign-in heading', SIGN_IN], ['a sign-in heading with 2.1.322\'s option label', SIGN_IN_322],
+    ['a forced login method before the address appears', FORCED], ['a forced claude.ai login method of 2.1.322 before the address appears', FORCED_322],
     ['the code prompt', CODE_PROMPT],
     ['the Console sign-in method', ['Anthropic Console account', 'How do you want to sign in?', '\u276f Sign in with your Console account (recommended)']],
     ['the Teleport sign-in gate', ['Log in to Claude', 'Teleport requires a Claude.ai account.', '\u276f Login with Claude account']],
@@ -110,6 +112,7 @@ describe('the sign-in screens Relay Desk recognises', () => {
     ['the Cloud gateway address', GATEWAY_ADDRESS], ['the Cloud gateway address a policy enforces', GATEWAY_LOCKED],
     ['the Cloud gateway a policy enforces without an address', GATEWAY_UNSET], ['the connection to the gateway', GATEWAY_CONNECTING],
     ['the question whether to trust the gateway', GATEWAY_TRUST], ['the gateway\'s device code', GATEWAY_CODE],
+    ['the gateway\'s device code with 2.1.322\'s notice from the gateway', GATEWAY_CODE_NOTICE],
     ['the gateway account to confirm', GATEWAY_ACCOUNT], ['the gateway sign-in done', GATEWAY_DONE],
   ])('matches %s', (_name, rows) => {
     expect(seen(rows)).toBe(true);
@@ -117,7 +120,7 @@ describe('the sign-in screens Relay Desk recognises', () => {
 
   it('matches every Cloud gateway screen as the CLI lays it out in a session, and the trust question of a one-label host by its other rows', () => {
     const profileLocked = GATEWAY_LOCKED.map((row) => row.replace(HOME_SETTINGS, PROFILE_SETTINGS));
-    for (const rows of [GATEWAY_ADDRESS, GATEWAY_LOCKED, profileLocked, GATEWAY_UNSET, GATEWAY_CONNECTING, GATEWAY_TRUST, GATEWAY_CODE, GATEWAY_ACCOUNT, GATEWAY_DONE]) {
+    for (const rows of [GATEWAY_ADDRESS, GATEWAY_LOCKED, profileLocked, GATEWAY_UNSET, GATEWAY_CONNECTING, GATEWAY_TRUST, GATEWAY_CODE, GATEWAY_CODE_NOTICE, GATEWAY_ACCOUNT, GATEWAY_DONE]) {
       expect(seen(laidOut(rows))).toBe(true);
     }
     const oneLabel = GATEWAY_TRUST.map((row) => row.replace(GATEWAY_HOST, 'gateway'));
@@ -180,7 +183,7 @@ describe('the sign-in screens Relay Desk recognises', () => {
 
   it.each([
     ['the subscription login a setting forces', 'Login method pre-selected: Subscription Plan (Claude Pro/Max)'],
-    ['the claude.ai login a setting forces in 2.1.318', 'Login method pre-selected: Claude subscription (claude.ai account)'],
+    ['the claude.ai login a setting forces in 2.1.322', 'Login method pre-selected: Claude subscription (claude.ai account)'],
     ['the Console login a setting forces', 'Login method pre-selected: API usage billing (Anthropic Console)'],
     ['/upgrade starting a new login', 'Starting new login following /upgrade. Exit with Ctrl-C to use existing account.'],
     ['/usage-credits starting a new login', 'Starting new login following /usage-credits. Exit with Ctrl-C to use existing account.'],
@@ -210,7 +213,7 @@ describe('the sign-in screens Relay Desk recognises', () => {
     '  Login successful. Press Enter\u2026',
     '\u23fa Starting authentication\u2026 then the browser opens.',
     '\u25cf Login method pre-selected: none, so the CLI asks.',
-    '\u25cf Login method pre-selected: Claude subscription (claude.ai account) is how 2.1.318 words it.',
+    '\u25cf Login method pre-selected: Claude subscription (claude.ai account) is how 2.1.322 words it.',
     '\u25cf Login method pre-selected: Claude subscription (claude.ai account',
     '\u25cf Claude subscription (claude.ai account)',
     '\u25cf Starting new login following /upgrade means the CLI signs in again.',
@@ -294,13 +297,14 @@ function startup(correlated = true) {
   };
 }
 
-const SCREENS: Array<[string, string[]]> = [['sign-in heading', SIGN_IN], ['forced login method', FORCED], ['forced login method of 2.1.318', FORCED_318], ['code prompt', CODE_PROMPT],
+const SCREENS: Array<[string, string[]]> = [['sign-in heading', SIGN_IN], ['forced login method', FORCED], ['forced login method of 2.1.322', FORCED_322], ['code prompt', CODE_PROMPT],
   ['wrapped authorization address', wrapped(COLUMNS)],
   ['spinner row of the GitHub app token step', ['Set up Claude GitHub Actions', '', '\u2736  Starting authentication\u2026']],
   ['first-run sign-in after its start failed', FIRST_RUN_RETRY],
   ['Cloud gateway address', GATEWAY_ADDRESS], ['Cloud gateway address a policy enforces', GATEWAY_LOCKED],
   ['Cloud gateway without an address', GATEWAY_UNSET], ['connection to the gateway', GATEWAY_CONNECTING],
-  ['question whether to trust the gateway', GATEWAY_TRUST], ['gateway device code', GATEWAY_CODE], ['gateway account to confirm', GATEWAY_ACCOUNT]];
+  ['question whether to trust the gateway', GATEWAY_TRUST], ['gateway device code', GATEWAY_CODE], ['gateway device code with a notice', GATEWAY_CODE_NOTICE],
+  ['gateway account to confirm', GATEWAY_ACCOUNT]];
 
 describe('the CLI sign-in on the startup screen', () => {
   it.each(SCREENS)(
@@ -703,7 +707,7 @@ describe('the CLI sign-in in a mirrored panel', () => {
 });
 
 describe('the CLI sign-in commands', () => {
-  it('are the commands of CLI 2.1.311 and 2.1.318 that can run its own sign-in', () => {
+  it('are the commands of CLI 2.1.311 and 2.1.322 that can run its own sign-in', () => {
     expect([...SIGN_IN_COMMANDS].sort()).toEqual(['design-login', 'extra-usage', 'install-github-app', 'login', 'logout', 'pro-trial-expired',
       'rate-limit-options', 'remote-control', 'setup-bedrock', 'teleport', 'upgrade', 'usage-credits']);
     expect([...ACCOUNT_COMMANDS].sort()).toEqual(['design-login', 'login', 'logout']);
@@ -793,7 +797,7 @@ describe('a session of a signed-out account', () => {
   }
 
   it.each([['first-run sign-in', FIRST_SIGN_IN], ['Cloud gateway address', GATEWAY_ADDRESS], ['forced login method', FORCED],
-    ['forced login method of 2.1.318', FORCED_318], ['first-run sign-in after its start failed', FIRST_RUN_RETRY]])(
+    ['forced login method of 2.1.322', FORCED_322], ['first-run sign-in after its start failed', FIRST_RUN_RETRY]])(
     'opens, and ends with the sign-in message at the CLI\'s %s, which answers the text-style key', async (_name, rows) => {
       vi.useFakeTimers();
       const f = engine();

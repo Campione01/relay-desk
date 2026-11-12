@@ -231,6 +231,7 @@ export const en: Record<MessageKey, string> = {
   'slash.finishFirst': 'Finish /{name} first.',
   'slash.relayHandled': "Use Relay's own controls for /{name}.",
   'slash.signInTerminal': "Relay Desk does not run Claude Code's own sign-in inside a session. Run /{name} in a terminal.",
+  'slash.leadingSlash': "A message can't start with “/”: the CLI treats it as a command. Remove the leading “/” to send it as a message.",
   'submission.sendAgain': 'Send again',
   'attach.listLabel': 'Attachments',
   'attach.remove': 'Remove {name}',
@@ -241,6 +242,7 @@ export const en: Record<MessageKey, string> = {
   'attach.pdfTooLarge': '“{name}” was not added: PDF files can be up to {limit}.',
   'attach.unsupported': '“{name}” was not added: only PNG, JPEG, GIF and WebP images and PDF files can be attached.',
   'attach.readFailed': 'Could not read “{name}”.',
+  'attach.unsafeText': "A message with files can't start with “!” or contain hidden control characters. Remove them to send it.",
   'attach.moreProblems': '{n} more were not added.',
   'attach.dismiss': 'Dismiss',
 

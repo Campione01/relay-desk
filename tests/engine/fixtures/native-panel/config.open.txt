@@ -1,5 +1,4 @@
-          C:\RelayDeskNativePrototype\acceptance\native-yVYRFm\workspace
-
+⎿  Session color set to: orange
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
    Settings  Status   Config   Usage   Stats
 
@@ -8,6 +7,7 @@
    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
    > Auto-compact                                true
+     Idle compaction                             true
      Continue automatically at usage limit       true
      Switch models when a message is flagged     Switch automatically ›
      Show tips                                   true
@@ -23,7 +23,7 @@
      Terminal progress bar                       true
      Show turn duration                          true
      Time format                                 auto ›
-     Default permission mode                     Manual
+     Default permission mode                     Auto (default)
      Worktree base ref                           fresh
      Use auto mode during plan                   true
      Respect .gitignore in file picker           true
@@ -42,7 +42,6 @@
      Show last response in external editor       false
      Show PR status footer                       true
      Model                                       claude-opus-5-5 ›
-     Auto-connect to IDE (external terminal)     false
-     ↓ 5 more
+     ↓ 6 more
 
    Type to filter · Enter/↓ to select · ↑ to tabs · Esc to clear

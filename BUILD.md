@@ -32,7 +32,7 @@ run during this step.
   (`typecheck:tracks`, `cli:status`) take the same option. Every clone of the repository on the machine shares the
   default folder and reuses a complete stage without downloading again.
 - A slow download still succeeds: it stops only when no data arrives for 60 s, or after a total cap that is generous
-  for the package size (about 87 minutes for 2.1.318). If it fails or is interrupted, run the same command again; see
+  for the package size (about 88 minutes for 2.1.322). If it fails or is interrupted, run the same command again; see
   "A CLI download failed" under Troubleshooting.
 - Run one `npm run cli:<track>` at a time. Nothing locks a stage folder: a second run for the same stage folder (same
   stage root, version and selection) from the same clone finds the first run's incomplete stage, deletes it, and the

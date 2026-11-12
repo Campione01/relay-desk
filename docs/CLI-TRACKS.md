@@ -15,7 +15,7 @@ The tracks follow the official npm dist-tags of `@anthropic-ai/claude-code`:
 | Track | Version | claude.exe sha256 | Verification |
 | --- | --- | --- | --- |
 | stable | 2.1.311 | `966f4b2ce962298f5dee6a942e8c47c8f97392e69e728e622319a98b259c0680` | `real-account-and-isolated` |
-| latest | 2.1.318 | `b9aa5b08dc2cc46ea77d334dce792d1b8fdbb3a43bb290efdebdc905b1181082` | `isolated-only` |
+| latest | 2.1.322 | `345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298` | `isolated-only` |
 
 The table matches `NATIVE_CLI_TRACKS` and `NATIVE_CLI_BUILDS` in `src/main/native/cliBuilds.ts`;
 `tests/source/cli-tracks-doc.test.mjs` fails when they differ.
@@ -40,12 +40,12 @@ npm run build                   # regenerate the Mod declarations and rebuild fo
 `npm run cli:<track>`:
 
 1. Reads the track's npm dist-tag. If it no longer names the admitted version, it stops before downloading, for
-   example: `npm latest is 2.1.319; this source admits 2.1.318. Run npm run cli:latest -- --exact.`
+   example: `npm latest is 2.1.323; this source admits 2.1.322. Run npm run cli:latest -- --exact.`
 2. Stages the package from `registry.npmjs.org` only, with the registry integrity checks, into
    `%LOCALAPPDATA%\relay-desk-dev\cli-stage` (or `--stage-root <absolute folder>`, outside the repository). It never runs
    the CLI. The registry must start answering the download request within 120 s, and the download stops only if no data
    arrives for 60 s or if it runs past a total cap: the larger of 30 minutes and the package's unpacked size read at
-   64 KiB/s. For 2.1.318 (159,306,524 bytes to download, 342,408,922 unpacked) the cap is about 87 minutes, so an
+   64 KiB/s. For 2.1.322 (161,265,952 bytes to download, 346,496,730 unpacked) the cap is about 88 minutes, so an
    average of about 30 KB/s (about 0.24 Mbit/s) is enough. The 120 s window covers only the download. The metadata
    checks before it have their own short limits: see "Metadata checks before the download" below.
 3. Checks that the staged version and the sha256 of `claude.exe` equal the admitted entry.

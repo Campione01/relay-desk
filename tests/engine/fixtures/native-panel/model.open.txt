@@ -1,44 +1,44 @@
-          Claude Code v2.1.308
-           Opus 5.5 with xhigh effort · API Usage Billing
-           C:\RelayDeskNativePrototype\acceptance\native-EF1YeC\workspace
+⎿  Context Usage
+     ⛀ ⛀ ⛀ ⛀ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   Opus 5.5
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   claude-opus-5-5
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   2.2k/1m tokens (0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   Estimated usage by category
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System prompt: 144 tokens (0.0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ MCP server instructions: 16 tokens (0.0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Skills: 2.1k tokens (0.2%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 16 tokens (0.0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝   ⛶ Free space: 964.8k (96.5%)
+                                               ⛝ Autocompact buffer: 33k tokens (3.3%)
 
+     Auto-compact window: 1m tokens
+
+     MCP tools · /mcp
+     └ 1 tool · 0 tokens
+
+     Skills · /skills
+     └ 13 skills · 2.1k tokens
+
+     /context all to expand
 
 > /effort
   ⎿  Cancelled
 
+> /fast
+  ⎿  Fast mode OFF
 
+> /keybindings
+  ⎿  Created C:\RelayDeskNativePrototype\acceptance\native-1Ui5G7\home.claude\keybindings.json with template. Opened in your editor.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> /memory
+  ⎿  Cancelled memory editing
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
    Select model
    Switch between Claude models. Your pick becomes the default for new sessions. For other/previous model names, specify with --model.
 
      1. Default (recommended)  Use the default model (currently Opus 5.5) · $4/$20 per Mtok
    > 2. Opus √                 Opus 5.5 · Best for everyday, complex tasks · $4/$20 per Mtok
-     3. Fable                  Fable 5.1 · Most capable for your hardest and longest-running tasks · $10/$50 per Mtok
+     3. Fable                  Fable 5.2 · Most capable for your hardest and longest-running tasks · $8/$40 per Mtok
      4. Sonnet                 Sonnet 5.5 · Efficient for routine tasks · $2/$10 per Mtok
      5. Haiku                  Haiku 5.5 · Fastest for quick answers · $0.10/$0.50 per Mtok ($0.50/$2.50 for prompts over 100k)
 

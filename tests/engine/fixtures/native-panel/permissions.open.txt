@@ -1,41 +1,41 @@
-          Claude Code v2.1.308
-           Opus 5.5 with xhigh effort · API Usage Billing
-           C:\RelayDeskNativePrototype\acceptance\native-EF1YeC\workspace
-
-
-> /effort
-  ⎿  Cancelled
-
 > /model
   ⎿  Kept model as Opus 5.5
 
+> /__remote-workflow
+  ⎿  remote-workflow: error[not-remote-session]: this command only runs inside a remote (CCR) session (CLAUDE_CODE_REMOTE is not set). Use
+     the Workflow tool locally.
 
+> /workflow-launch-exec
+  ⎿  workflow-launch-exec: no pending launch handoff for this invocation (expected when a restored session replays the dispatch turn);
+     nothing executed.
 
+> /plugin
 
+● See the full changelog at: https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md
 
+> /reload-plugins
+  ⎿  Reloaded: 1 plugin · 0 skills · 6 agents · 0 hooks · 0 plugin MCP servers · 0 plugin LSP servers
 
+> /reload-skills
+  ⎿  Reloaded skills: 13 skills available (none added or removed).
 
+> /rename
+  ⎿  Could not generate a name: no conversation context yet. Usage: /rename <name>
 
+> /setup-bedrock
 
+> /setup-vertex
 
+> /scroll-speed
+  ⎿  Scroll speed unchanged
 
+> /pro-trial-expired
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> /recap
+  ⎿  /recap only runs when you ask for it yourself in this session: from the terminal, the Claude app or claude.ai/code, or over Remote
+     Control. A message relayed from Slack, Teams or a project thread, or sent by a routine or another program, can't request it.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
-   Permissions  Recently denied   Allow   Ask   Deny   Auto mode   Workspace
+   Permissions  Recently blocked   Allow   Ask   Deny   Auto mode   Workspace
 
    Claude Code won't ask before using allowed tools.
    ╭───────────────────────────────────────────────╮

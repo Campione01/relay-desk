@@ -7,7 +7,7 @@ export interface NativeCliBuild { readonly version: string; readonly sha256: str
 
 export const NATIVE_CLI_BUILDS: readonly NativeCliBuild[] = Object.freeze([
   Object.freeze({ version: '2.1.311', sha256: '966f4b2ce962298f5dee6a942e8c47c8f97392e69e728e622319a98b259c0680' }),
-  Object.freeze({ version: '2.1.318', sha256: 'b9aa5b08dc2cc46ea77d334dce792d1b8fdbb3a43bb290efdebdc905b1181082' }),
+  Object.freeze({ version: '2.1.322', sha256: '345996b4bdbae21d817f750fae2f34cbf8d81224a5444c78136091d121beb298' }),
 ]);
 
 /** `builds` other than the default comes only from the fixture admission seam (NativeUiControllerOptions.admittedBuilds). */
@@ -23,7 +23,7 @@ export interface NativeCliTrackInfo { readonly version: string; readonly verific
 /** Each track names exactly one entry of NATIVE_CLI_BUILDS; the stable entry stays first. */
 export const NATIVE_CLI_TRACKS: Readonly<Record<NativeCliTrack, NativeCliTrackInfo>> = Object.freeze({
   stable: Object.freeze({ version: '2.1.311', verification: 'real-account-and-isolated' }),
-  latest: Object.freeze({ version: '2.1.318', verification: 'isolated-only' }),
+  latest: Object.freeze({ version: '2.1.322', verification: 'isolated-only' }),
 });
 
 /** The track of an installed binary, by its sha256; when both tracks name one version it is stable. */

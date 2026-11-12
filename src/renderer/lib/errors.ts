@@ -22,6 +22,9 @@ const RULES: readonly Rule[] = [
   [/Native interactive process exited|Native transport: (?:owned child exited|Mod receiver disconnected|runtime closed|session is not ready)/,
     () => ({ key: 'error.sessionEnded' })],
   [/Native transport: request timed out/, () => ({ key: 'error.timedOut' })],
+  [/Relay did not send this message: text that starts with "\/" runs as a CLI command\.|Native control gate \[prompt\.slash\]: /,
+    () => ({ key: 'slash.leadingSlash' })],
+  [/Attachment text contains unsafe terminal controls or a terminal command\./, () => ({ key: 'attach.unsafeText' })],
   [/Native control gate \[[^\]]+\]: /, () => ({ key: 'error.notApplied' })],
 ];
 

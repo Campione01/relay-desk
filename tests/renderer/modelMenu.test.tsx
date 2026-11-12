@@ -22,10 +22,10 @@ const NATIVE_MODELS: ModelOption[] = [
   { value: 'sonnet', label: 'Sonnet 5.5', catalogSource: 'native-config', equivalentValues: ['sonnet', 'claude-sonnet-5-5'] },
   { value: 'opus', label: 'Opus 5.5', catalogSource: 'native-config', equivalentValues: ['opus', 'claude-opus-5-5'] },
   { value: 'haiku', label: 'Haiku 5.5', catalogSource: 'native-config', equivalentValues: ['haiku', 'claude-haiku-5-5'] },
-  { value: 'fable', label: 'Fable 5.1', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-1'] },
+  { value: 'fable', label: 'Fable 5.2', catalogSource: 'native-config', equivalentValues: ['fable', 'claude-fable-5-2'] },
   { value: 'sonnet[1m]', label: 'Sonnet 5.5 (1M context)', catalogSource: 'native-config', equivalentValues: ['sonnet[1m]', 'claude-sonnet-5-5[1m]'] },
   { value: 'opus[1m]', label: 'Opus 5.5 (1M context)', catalogSource: 'native-config', equivalentValues: ['opus[1m]', 'claude-opus-5-5[1m]'] },
-  { value: 'fable[1m]', label: 'Fable 5.1 (1M context)', catalogSource: 'native-config', equivalentValues: ['fable[1m]', 'claude-fable-5-1[1m]'] },
+  { value: 'fable[1m]', label: 'Fable 5.2 (1M context)', catalogSource: 'native-config', equivalentValues: ['fable[1m]', 'claude-fable-5-2[1m]'] },
 ];
 
 const footer = (): HTMLElement => screen.getByTestId('prompt-footer');
@@ -71,7 +71,7 @@ describe('model names (lib/models)', () => {
     const menu = modelMenu('claude-opus-5-5', NATIVE_MODELS, 'Default model');
     expect(menu.main).toEqual([
       { value: 'opus', name: 'Opus 5.5' },
-      { value: 'fable', name: 'Fable 5.1' },
+      { value: 'fable', name: 'Fable 5.2' },
       { value: 'sonnet', name: 'Sonnet 5.5' },
       { value: 'haiku', name: 'Haiku 5.5' },
     ]);
@@ -230,12 +230,12 @@ describe('footer model menu', () => {
     const effort = controller.currentView()?.effort;
     let menu = await openModelMenu(user);
     const choices = within(menu).getAllByRole('menuitemradio');
-    expect(choices.map((row) => row.querySelector('.rd-menu__label')?.textContent)).toEqual(['Opus 5.5', 'Fable 5.1', 'Sonnet 5.5', 'Haiku 5.5']);
+    expect(choices.map((row) => row.querySelector('.rd-menu__label')?.textContent)).toEqual(['Opus 5.5', 'Fable 5.2', 'Sonnet 5.5', 'Haiku 5.5']);
     expect(choices.filter((row) => row.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     expect(within(menu).getByRole('menuitemradio', { name: 'Opus 5.5' })).toHaveAttribute('aria-checked', 'true');
     await user.click(within(menu).getByRole('menuitem', { name: 'More models' }));
     const more = await screen.findByRole('menu', { name: 'More models' });
-    expect(rowsOf(more)).toEqual(['Opus 5.5 (1M context)', 'Fable 5.1 (1M context)', 'Sonnet 5.5 (1M context)']);
+    expect(rowsOf(more)).toEqual(['Opus 5.5 (1M context)', 'Fable 5.2 (1M context)', 'Sonnet 5.5 (1M context)']);
     expect(setModel).not.toHaveBeenCalled();
     expect(setEffort).not.toHaveBeenCalled();
     expect(controller.currentView()?.model).toBe('claude-opus-5-5');

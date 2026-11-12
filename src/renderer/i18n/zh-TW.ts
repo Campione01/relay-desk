@@ -230,6 +230,7 @@ export const zhTW = {
   'slash.finishFirst': '請先完成 /{name}。',
   'slash.relayHandled': '請改用 Relay 本身的功能來執行 /{name}。',
   'slash.signInTerminal': 'Relay Desk 不會在工作階段中執行 Claude Code 自己的登入。請在終端機中執行 /{name}。',
+  'slash.leadingSlash': '訊息不能以「/」開頭，CLI 會把它當成指令。請移除開頭的「/」再送出。',
   'submission.sendAgain': '重新送出',
   'attach.listLabel': '附件',
   'attach.remove': '移除 {name}',
@@ -240,6 +241,7 @@ export const zhTW = {
   'attach.pdfTooLarge': '「{name}」未加入：PDF 檔案上限為 {limit}。',
   'attach.unsupported': '「{name}」未加入：只能附加 PNG、JPEG、GIF、WebP 圖片與 PDF 檔案。',
   'attach.readFailed': '無法讀取「{name}」。',
+  'attach.unsafeText': '附有檔案的訊息不能以「!」開頭，也不能含有隱藏的控制字元。請移除後再送出。',
   'attach.moreProblems': '另有 {n} 個未加入。',
   'attach.dismiss': '關閉',
 

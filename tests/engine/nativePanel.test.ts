@@ -6,9 +6,11 @@ import { cellWidth, glyphWidth, splitGraphemes } from '@shared/terminalWidth';
 import { detectNativePanel, encodeNativePanelInput, nativePanelPayload, type NativePanelInputContext } from '../../src/main/native/panel';
 import { NativeTerminalScreen } from '../../src/main/native/terminalScreen';
 
-// Terminal output of the official CLI 2.1.308 on a 140x48 ConPTY in the isolated fixture (synthetic HOME, fake key,
-// loopback provider), captured by the maintainers' panel survey: X.open.ansi from dispatching /X until its
-// dialog was drawn, X.esc0/esc1.ansi after each Esc, X.open.txt the projection recorded at that moment.
+// Terminal output of the official CLI on a 140x48 ConPTY in the isolated fixture (synthetic HOME, fake key, loopback
+// provider), captured by the maintainers' panel survey: X.open.ansi from dispatching /X until its dialog was
+// drawn, X.esc0/esc1.ansi after each Esc, X.open.txt the projection recorded at that moment. config, model, permissions
+// and tasks are 2.1.322 captures (their layouts changed); the others and startup.ansi are 2.1.308's, which 2.1.322 draws
+// the same.
 const fixture = (name: string): string => readFileSync(join(__dirname, 'fixtures', 'native-panel', name), 'utf8');
 const replay = (...names: string[]): NativeTerminalScreen => {
   const screen = new NativeTerminalScreen(140, 48);
@@ -42,13 +44,13 @@ const contextOf = (screen: NativeTerminalScreen, panel: NativePanel): NativePane
 const PANELS = [
   ['config', 2, /^Settings {2}Status {3}Config {3}Usage {3}Stats$/, /^Type to filter \u00b7 Enter\/\u2193 to select \u00b7 \u2191 to tabs \u00b7 Esc to clear$/],
   ['effort', 39, /^Effort$/, /s for this session only \u00b7 Esc to cancel$/],
-  ['permissions', 37, /^Permissions {2}Recently denied {3}Allow /, /^\u2190\/\u2192 to switch \u00b7 \u2193 to select \u00b7 Esc to cancel$/],
+  ['permissions', 37, /^Permissions {2}Recently blocked {3}Allow /, /^\u2190\/\u2192 to switch \u00b7 \u2193 to select \u00b7 Esc to cancel$/],
   ['model', 35, /^Select model$/, /^Enter to set as default \u00b7 s to use this session only \u00b7 Esc to cancel$/],
   ['help', 28, /^Help {2}General {3}Commands {3}Custom commands/, /^Esc to cancel$/],
-  ['tasks', 42, /^Background/, /^\u2191\/\u2193 to select \u00b7 Enter to view \u00b7 Esc to close$/],
+  ['tasks', 40, /^Background/, /^\u2191\/\u2193 to select \u00b7 Esc to close$/],
 ] as const;
 
-describe('native panel detection on CLI 2.1.308 captures', () => {
+describe('native panel detection on CLI captures', () => {
   it.each(PANELS)('detects the docked /%s dialog and mirrors the rows the CLI drew', (name, borderRow, first, last) => {
     const screen = replay(`${name}.open.ansi`);
     const region = detectNativePanel(screen);

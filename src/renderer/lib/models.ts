@@ -120,8 +120,14 @@ export function currentModelOption(model: string | undefined, models: readonly M
 /** Name of the current model; undefined when it is the CLI default and no list says which model that is. */
 export function currentModelName(model: string | undefined, models: readonly ModelOption[], source?: ModelOption['catalogSource']): string | undefined {
   const option = currentModelOption(model, models);
-  if (option) return modelName(option);
+  if (option) return isNativeCatalog(models, source) ? nativeRowName(option, model) : modelName(option);
   return model && model !== 'default' ? (isNativeCatalog(models, source) ? nativeModelName(model) : prettyModel(model)) : undefined;
+}
+
+/** A native row that names only a family (an alias standing for several models) takes the name of the model the session reports. */
+function nativeRowName(option: ModelOption, model: string | undefined): string {
+  const name = modelName(option);
+  return model && model !== option.value && !FAMILY_VERSION.test(name) && option.equivalentValues?.includes(model) ? nativeModelName(model) : name;
 }
 
 export interface ModelMenu {
@@ -134,10 +140,14 @@ export interface ModelMenu {
 
 /** Rows of the model menu. A current model that neither list has (an unknown id, or no list yet) is added to the main list. */
 export function modelMenu(model: string | undefined, models: readonly ModelOption[], defaultName: string, source?: ModelOption['catalogSource']): ModelMenu {
-  const { main, more } = modelLists(models, source);
+  const native = isNativeCatalog(models, source);
+  const lists = modelLists(models, source);
   const current = currentModelName(model, models, source) ?? defaultName;
   const option = currentModelOption(model, models);
-  const listed = [...main, ...more].find((row) => isNativeCatalog(models, source) ? row.value === option?.value : row.name === current);
+  // The current native row reads as the current model, so a family row shows the version the session runs.
+  const named = (rows: ModelChoice[]) => native && option ? rows.map((row) => row.value === option.value ? { ...row, name: current } : row) : rows;
+  const main = named(lists.main), more = named(lists.more);
+  const listed = [...main, ...more].find((row) => native ? row.value === option?.value : row.name === current);
   return { main: listed ? main : [...main, { value: model ?? 'default', name: current }], more, current,
     currentValue: listed?.value ?? model ?? 'default' };
 }

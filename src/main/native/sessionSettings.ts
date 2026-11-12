@@ -2,9 +2,14 @@ import { NATIVE_POINTER, NativeControlGate, type NativeUiController, type Native
 
 export type NativeSessionEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 const EFFORTS: readonly NativeSessionEffort[] = ['low', 'medium', 'high', 'xhigh', 'max'];
-/** Picker labels and native getter IDs verified without model requests on the pinned build. */
+/**
+ * Picker labels and native getter IDs verified without model requests. `fable` is Fable 5.2 from CLI 2.1.321, but on an
+ * older build, or where the account's model catalog still targets 5.1, the same alias draws and runs Fable 5.1. Both are
+ * listed; the row the picker draws decides which one a selection means, and the getter must report that one.
+ */
 export const NATIVE_SESSION_MODELS = [
   { model: 'claude-opus-5-5', alias: 'opus', label: 'Opus', display: 'Opus 5.5' },
+  { model: 'claude-fable-5-2', alias: 'fable', label: 'Fable', display: 'Fable 5.2' },
   { model: 'claude-fable-5-1', alias: 'fable', label: 'Fable', display: 'Fable 5.1' },
   { model: 'claude-sonnet-5-5', alias: 'sonnet', label: 'Sonnet', display: 'Sonnet 5.5' },
   { model: 'claude-haiku-5-5', alias: 'haiku', label: 'Haiku', display: 'Haiku 5.5' },
@@ -60,6 +65,23 @@ export function nativeEffortView(snapshot: NativeUiSnapshot): NativeEffortView |
 
 const SELECTED_ROW = new RegExp(`^\\s*${NATIVE_POINTER}\\s*(\\d+)\\.\\s*(.+)$`);
 const NUMBERED_ROW = new RegExp(`^\\s*(?:${NATIVE_POINTER}\\s*)?(\\d+)\\.\\s*(.+)$`);
+const pattern = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(' ', '\\s+');
+
+/**
+ * The two layouts of a picker row (after its number). Built-in rows put the family label first and the model's name at
+ * the start of the description ("Fable   Fable 5.2 · Most capable …"); cells right of a short label can keep stale
+ * characters, so anything may sit between the two, but the name must end at " ·" or the row's end: a subscriber's 1M rows
+ * read "Opus (1M context)   Opus 5.5 with 1M context · …" and "Sonnet 5.5 (1M context)   Sonnet 5.5 for long sessions"
+ * (2.1.322 `tm()`/`_d()`, the same in 2.1.311). An `availableModels` row for an older model ends with the newer one
+ * ("Fable 5.1   Newer version available · select Fable for Fable 5.2", `ds()`), so a name after "for" is not the row's
+ * model. A served catalog's rows (2.1.322 `fm()`) are labelled with the model's name
+ * itself and carry the catalog's own description ("Fable 5.2   For your toughest challenges"); the name must be followed
+ * by the current-model mark or the column gap, so "Fable 5.2 (1M context)" is another model.
+ */
+function rowNamesModel(text: string, item: typeof NATIVE_SESSION_MODELS[number]): boolean {
+  const name = pattern(item.display);
+  return new RegExp(`^${item.label}\\b.*(?<!\\bfor\\s+)\\b${name}(?=\\s+\\u00b7|\\s*$)`).test(text) || new RegExp(`^${name}(?:\\s+[\\u2714\\u221a])?(?:\\s{2,}|$)`).test(text);
+}
 
 export function nativeModelView(snapshot: NativeUiSnapshot): NativeModelView | undefined {
   const lines = panel(snapshot.text, 'Select model', /Enter\s+to\s+set\s+as\s+default.*s\s+to\s+use\s+this\s+session\s+only.*Esc\s+to\s+cancel/i);
@@ -72,11 +94,12 @@ export function nativeModelView(snapshot: NativeUiSnapshot): NativeModelView | u
   if (!rows.some((row) => row.ordinal === selectedRow)) return undefined;
   const choices: NativeModelView['choices'] = [];
   for (const item of NATIVE_SESSION_MODELS) {
-    const version = item.display.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(' ', '\\s+');
-    const matches = rows.filter((row) => new RegExp(`^${item.label}\\b.*\\b${version}\\b`).test(row.text));
+    const matches = rows.filter((row) => rowNamesModel(row.text, item));
     if (matches.length > 1) return undefined;
     if (matches.length === 1) choices.push({ model: item.model, ordinal: matches[0].ordinal });
   }
+  // One row naming two models identifies neither.
+  if (new Set(choices.map((choice) => choice.ordinal)).size !== choices.length) return undefined;
   const defaults = rows.filter((row) => /^Default\b/.test(row.text));
   if (defaults.length > 1) return undefined;
   const defaultDisplay = defaults.length === 1 ? /\bUse\s+the\s+default\s+model\s+\(currently\s+([^()]+)\)/.exec(defaults[0].text)?.[1].trim() : undefined;
@@ -132,14 +155,17 @@ export class NativeSessionSettings {
   }
 
   setModel(model: string): Promise<{ model: string; scope: 'session' }> {
-    const requested = NATIVE_SESSION_MODELS.find((item) => item.model === model || item.alias === model);
-    if (!requested && model !== 'default') return Promise.reject(new NativeControlGate('model', 'the requested native model or alias is not attested by this adapter.'));
+    const requested = NATIVE_SESSION_MODELS.filter((item) => item.model === model || item.alias === model);
+    if (!requested.length && model !== 'default') return Promise.reject(new NativeControlGate('model', 'the requested native model or alias is not attested by this adapter.'));
     return this.options.ui.run('settings.model', async (tx) => {
       const before = fingerprint(await this.options.preferenceFingerprint());
       let snapshot = await tx.open('model', '', (frame) => nativeModelView(frame) !== undefined, this.options.wait);
       const view = nativeModelView(snapshot);
-      const choice = model === 'default' ? view?.defaultChoice : view?.choices.find((item) => item.model === requested?.model);
-      if (!choice) throw new NativeControlGate('model', model === 'default' ? 'the native Default row does not identify an attested model.' : 'the attested model is not available in this native catalog.');
+      // An alias with two attested models (fable) means the one the picker draws.
+      const drawn = view?.choices.filter((item) => requested.some((entry) => entry.model === item.model)) ?? [];
+      const choice = model === 'default' ? view?.defaultChoice : drawn.length === 1 ? drawn[0] : undefined;
+      if (!choice) throw new NativeControlGate('model', model === 'default' ? 'the native Default row does not identify an attested model.'
+        : drawn.length > 1 ? 'the native picker draws more than one attested model for this alias.' : 'the attested model is not available in this native catalog.');
       const target = choice.ordinal;
       const attested = NATIVE_SESSION_MODELS.find((item) => item.model === choice.model)!;
       const at = (frame: NativeUiSnapshot, selected: number) => {
@@ -157,7 +183,7 @@ export class NativeSessionSettings {
           (frame) => at(frame, current.selected + direction), this.options.wait);
       }
       if (!at(snapshot, target)) throw new NativeControlGate('model', 'the attested native model row was not selected.');
-      const display = attested.display.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(' ', '\\s+');
+      const display = pattern(attested.display);
       const confirmation = model === 'default'
         ? /Set\s+model\s+to\s+[^\n]+\s+for\s+this\s+session\s+only/i
         : new RegExp(`Set\\s+model\\s+to\\s+${display}\\s+for\\s+this\\s+session\\s+only`, 'i');

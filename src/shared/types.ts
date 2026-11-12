@@ -370,6 +370,8 @@ export interface ModelOption {
   supportsFastMode?: boolean;
   /** What the CLI's model catalog says about this model's effort levels (native engine only). */
   effortGuide?: EffortGuide;
+  /** For a native alias that stands for several models: each one's notes by model id; the session's model picks one. */
+  effortGuideByModel?: Record<string, EffortGuide>;
 }
 
 /**

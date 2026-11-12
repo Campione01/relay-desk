@@ -566,6 +566,92 @@ describe('slash commands Relay answers itself', () => {
       .toEqual(['This command only works in a terminal.', 'other failure', 'other failure']);
   });
 
+  const leadingSlash = "A message can't start with “/”: the CLI treats it as a command. Remove the leading “/” to send it as a message.";
+  it.each(['/tmp/a please read', '  /tmp/x.log', '\n/x.y', '/交接', '/ hi', '//c'])(
+    '%j sends nothing, keeps the draft and leaves a note instead of a failed row', async (text) => {
+      const { api, controller, key } = await ready();
+      const send = vi.spyOn(api.engine, 'send');
+      const items = controller.view(key)!.items;
+      act(() => controller.setDraft(key, text));
+      await act(async () => { expect(await controller.send(key, text)).toBe(false); });
+      expect(controller.state.toasts.at(-1)).toMatchObject({ kind: 'info', text: leadingSlash });
+      expect(screen.getByText(leadingSlash)).toBeInTheDocument();
+      expect(controller.state.drafts[key]).toBe(text);
+      expect(controller.view(key)).toMatchObject({ submissions: [], errors: [], localEchoes: [] });
+      expect(controller.view(key)!.items).toBe(items);
+      expect(screen.queryByRole('button', { name: 'Send again' })).not.toBeInTheDocument();
+      expect(send).not.toHaveBeenCalled();
+      expect(translate('zh-TW', 'slash.leadingSlash')).toBe('訊息不能以「/」開頭，CLI 會把它當成指令。請移除開頭的「/」再送出。');
+    });
+
+  it.each(['/E:/demo-work/project-a/x/REPORT.md', ' \t/E:/demo-work/project-a/x/REPORT.md'])(
+    '%j goes out without its leading "/" and shows one row once the CLI echoes it', async (text) => {
+      const { api, controller, key, handleId } = await ready();
+      const send = vi.spyOn(api.engine, 'send').mockResolvedValue(undefined);
+      act(() => controller.setDraft(key, text));
+      await act(async () => { expect(await controller.send(key, text)).toBe(true); });
+      expect(send.mock.calls).toEqual([[handleId, 'E:/demo-work/project-a/x/REPORT.md', undefined]]);
+      act(() => api.mock.emitEngine({ type: 'item', handleId, item: { kind: 'user', id: 'send-1', text: 'E:/demo-work/project-a/x/REPORT.md' } }));
+      const rows = controller.view(key)!.items.filter((item) => item.kind === 'user' && item.text.includes('demo-work'));
+      expect(rows).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/demo-work/project-a/x/REPORT.md' }]);
+      expect(controller.state.drafts[key]).toBe('');
+      expect(controller.state.toasts).toEqual([]);
+    });
+
+  const image = { kind: 'image' as const, mediaType: 'image/png', data: 'iVBORw0KGgo=', name: 'shot.png' };
+  it.each(['/tmp/x', '  /compact keep', '/交接'])('%j with a file sends nothing, keeps the draft and leaves the same note', async (text) => {
+    const { api, controller, key } = await ready();
+    const send = vi.spyOn(api.engine, 'send');
+    const items = controller.view(key)!.items;
+    act(() => controller.setDraft(key, text));
+    await act(async () => { expect(await controller.send(key, text, false, [image])).toBe(false); });
+    expect(controller.state.toasts.at(-1)).toMatchObject({ kind: 'info', text: leadingSlash });
+    expect(controller.state.drafts[key]).toBe(text);
+    expect(controller.view(key)).toMatchObject({ submissions: [], errors: [], localEchoes: [] });
+    expect(controller.view(key)!.items).toBe(items);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('a drive path with a file goes out without its leading "/" and its echo is matched by text: one row', async () => {
+    const { api, controller, key, handleId } = await ready();
+    const send = vi.spyOn(api.engine, 'send').mockResolvedValue(undefined);
+    await act(async () => { expect(await controller.send(key, '/E:/x/REPORT.md', false, [image])).toBe(true); });
+    expect(send.mock.calls).toEqual([[handleId, 'E:/x/REPORT.md', { attachments: [image] }]]);
+    act(() => api.mock.emitEngine({ type: 'item', handleId, item: { kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', images: 1, imageRefs: [] } }));
+    expect(controller.view(key)!.items.filter((item) => item.kind === 'user' && item.text.includes('REPORT'))).toEqual([
+      { kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', images: 1, imageRefs: [] }]);
+  });
+
+  it('a queued drive path keeps one row through the queued echo from main and its delivery', async () => {
+    const { api, controller, key, handleId } = await ready();
+    const send = vi.spyOn(api.engine, 'send').mockResolvedValue(undefined);
+    act(() => api.mock.emitEngine({ type: 'state', handleId, state: 'running', startedAt: 1 }));
+    await act(async () => { await controller.send(key, '/E:/x/REPORT.md', true); });
+    expect(send.mock.calls).toEqual([[handleId, 'E:/x/REPORT.md', { queue: true }]]);
+    const rows = () => controller.view(key)!.items.filter((item) => item.kind === 'user' && item.text.includes('REPORT'));
+    expect(rows()).toEqual([expect.objectContaining({ text: 'E:/x/REPORT.md', queued: true })]);
+    act(() => api.mock.emitEngine({ type: 'item', handleId, item: { kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', queued: true } }));
+    expect(rows()).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md', queued: true }]);
+    act(() => api.mock.emitEngine({ type: 'item', handleId, item: { kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md' } }));
+    expect(rows()).toEqual([{ kind: 'user', id: 'send-1', text: 'E:/x/REPORT.md' }]);
+  });
+
+  it('Send again after a failed drive-path send sends the rewritten text again', async () => {
+    const rendered = await ready();
+    const { api, controller, key, handleId } = rendered;
+    const send = vi.spyOn(api.engine, 'send')
+      .mockRejectedValueOnce(new Error("Error invoking remote method 'relay:engine:send': Error: Native transport: request timed out"))
+      .mockResolvedValue(undefined);
+    act(() => controller.setDraft(key, '/E:/x/REPORT.md'));
+    await act(async () => { expect(await controller.send(key, '/E:/x/REPORT.md')).toBe(false); });
+    expect(controller.state.drafts[key]).toBe('/E:/x/REPORT.md');
+    act(() => controller.setDraft(key, ''));
+    await rendered.user.click(within(screen.getByTestId('inline-error')).getByRole('button', { name: 'Send again' }));
+    await waitFor(() => expect(send).toHaveBeenCalledTimes(2));
+    expect(send.mock.calls).toEqual([[handleId, 'E:/x/REPORT.md', undefined], [handleId, 'E:/x/REPORT.md', undefined]]);
+    expect(controller.state.toasts).toEqual([]);
+  });
+
   it('does not send a new slash command while one is pending; a note names it and plain text still goes', async () => {
     const { api, controller, key, handleId } = await ready();
     const compact = deferred<void>();

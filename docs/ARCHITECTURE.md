@@ -79,7 +79,7 @@ but the app's wiring replaces both with the native engine below.
   sign-in screen is never mirrored. Relay Desk does not check an account's status before a session; when a session shows
   that screen, Relay Desk sends neither the screen nor input, closes the session and asks the user to use Log in.
 - **Sign-in guard.** `src/shared/signIn.ts` holds the guard. Each screen update of the startup screen and of every
-  mirrored dialog is checked against the rows of the sign-in screens of CLI 2.1.311 and 2.1.318 (matched whole, after
+  mirrored dialog is checked against the rows of the sign-in screens of CLI 2.1.311 and 2.1.322 (matched whole, after
   the spinner or bullet the CLI draws in front is dropped) and against Claude's own authorization page address, per row
   and across rows that run to the last column of the terminal. An MCP server's own authorization address is not matched,
   so MCP authentication keeps working in the mirrored `/mcp` dialog. One list, `SIGN_IN_COMMANDS`, names the slash

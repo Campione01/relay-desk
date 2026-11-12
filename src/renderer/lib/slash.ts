@@ -92,7 +92,7 @@ export function slashInsertText(entry: SlashEntry): string {
   return `/${entry.name} `;
 }
 
-/** CLI 2.1.308 (and 2.1.311) aliases of the commands Relay routes, toasts or refuses; native-mod/hooks/bridge.ts keeps its own copy. */
+/** CLI 2.1.308 (and 2.1.311, 2.1.322) aliases of the commands Relay routes, toasts or refuses; native-mod/hooks/bridge.ts keeps its own copy. */
 export const SLASH_ALIASES: Readonly<Record<string, readonly string[]>> = {
   clear: ['reset', 'new'],
   resume: ['continue'],
@@ -102,7 +102,7 @@ export const SLASH_ALIASES: Readonly<Record<string, readonly string[]>> = {
   teleport: ['tp'],
 };
 
-/** CLI 2.1.308 (and 2.1.311) aliases of /rewind, after which Relay reads the conversation again; the bridge guards none, so its copy lacks them. */
+/** CLI 2.1.308 (and 2.1.311, 2.1.322) aliases of /rewind, after which Relay reads the conversation again; the bridge guards none, so its copy lacks them. */
 const REWIND_ALIASES: Readonly<Record<string, readonly string[]>> = { rewind: ['checkpoint', 'undo'] };
 
 const CANONICAL_NAMES: ReadonlyMap<string, string> = new Map(

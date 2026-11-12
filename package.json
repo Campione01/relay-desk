@@ -1,7 +1,7 @@
 {
   "name": "relay-desk",
   "productName": "Relay Desk",
-  "version": "0.2.5-public.1",
+  "version": "0.2.5-public.2",
   "private": true,
   "license": "MIT",
   "description": "Unofficial Windows desktop shell that runs Claude Code",

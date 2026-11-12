@@ -348,13 +348,19 @@ describe('the native session model list', () => {
     await config.session.close();
 
     const bridgeGuide = { description: 'From the bridge', levels: { max: { badge: { message: 'Unchecked', tone: 'warning' } } } };
+    const fable = ['fable', 'claude-fable-5-2', 'claude-fable-5-1'];
     const listed = nativeSession(reader, ['model.list'], [
       { value: 'claude-fable-5-1[1m]', label: 'Fable 5.1 (1M context)', effortGuide: bridgeGuide },
-      { value: 'provider/custom', label: 'Custom', effortGuide: bridgeGuide }, { value: 7 }]);
+      { value: 'provider/custom', label: 'Custom', effortGuide: bridgeGuide },
+      // Per-model notes from the bridge are dropped the same way.
+      { value: 'fable', label: 'Fable', equivalentValues: fable, effortGuideByModel: { 'claude-fable-5-2': bridgeGuide, 'claude-fable-5-1': bridgeGuide } },
+      { value: 'provider/other', label: 'Other', effortGuideByModel: { 'claude-other-1': bridgeGuide } }, { value: 7 }]);
     await listed.session.start();
     expect(await listed.session.models()).toEqual([
       { value: 'claude-fable-5-1[1m]', label: 'Fable 5.1 (1M context)', effortGuide: EXPECTED['claude-fable-5-1'] },
       { value: 'provider/custom', label: 'Custom' },
+      { value: 'fable', label: 'Fable', equivalentValues: fable, effortGuideByModel: { 'claude-fable-5-1': EXPECTED['claude-fable-5-1'] } },
+      { value: 'provider/other', label: 'Other' },
     ]);
     await listed.session.close();
   });

@@ -1,6 +1,7 @@
 import type { EngineEvent } from '@shared/events';
 import type { RelayApi } from '@shared/ipc';
 import { SHORTCUT_GROUPS, type Shortcut, type ShortcutAction, type ShortcutGroup } from '@shared/shortcuts';
+import { startsWithSlash, withoutDriveSlash } from '@shared/slashText';
 import {
   DEFAULT_PROFILE_ID,
   SHARED_CONTEXT_ERROR_PREFIX,
@@ -1314,9 +1315,15 @@ export class AppController {
     if (!text.trim() && attachments.length === 0) return false;
     const view = this.view(key);
     if (!view) return false;
-    const slash = attachments.length === 0 ? parseSlash(text) : null;
+    // Main sends the same rewritten text, and the CLI's copy is matched to this echo by its text.
+    const outgoing = withoutDriveSlash(text);
+    const slash = attachments.length === 0 ? parseSlash(outgoing) : null;
     const routed = slash ? this.routeSlash(key, view, slash.name, slash.args, text) : null;
     if (routed !== null) return routed;
+    if (!slash && startsWithSlash(outgoing)) {
+      this.toast('info', this.tr('slash.leadingSlash'));
+      return false;
+    }
     const echoId = this.nextId('local-user');
     const id = this.nextId('submission');
     const command = slash?.name;
@@ -1326,7 +1333,7 @@ export class AppController {
     const recent = new Set(view.submissions.filter((entry) => !isSubmissionPending(entry)).slice(-4).map((entry) => entry.id));
     this.patchView(key, (v) => ({
       ...v,
-      items: [...v.items, { kind: 'user', id: echoId, text, ...(queued ? { queued: true } : {}), ...(images ? { images } : {}) }],
+      items: [...v.items, { kind: 'user', id: echoId, text: outgoing, ...(queued ? { queued: true } : {}), ...(images ? { images } : {}) }],
       localEchoes: [...v.localEchoes, echoId],
       submissions: [...v.submissions.filter((submission) => isSubmissionPending(submission) || recent.has(submission.id)),
       { id, handleId, echoId, command, phase: 'preparing', createdAt: Date.now() }],
@@ -1346,7 +1353,7 @@ export class AppController {
     if (!handleId) {
       let opening = this.sendOpenings.get(key);
       if (!opening) {
-        opening = this.prepareSendHandle(key, text, queue);
+        opening = this.prepareSendHandle(key, outgoing, queue);
         this.sendOpenings.set(key, opening);
       }
       handleId = await opening;
@@ -1373,7 +1380,7 @@ export class AppController {
     try {
       const opts = { ...(queue ? { queue: true } : {}), ...(attachments.length ? { attachments } : {}) };
       // Main owns serialization and native acceptance. No timer guesses native progress or retries a request.
-      const sent = this.api.engine.send(owner, text, Object.keys(opts).length ? opts : undefined);
+      const sent = this.api.engine.send(owner, outgoing, Object.keys(opts).length ? opts : undefined);
       this.patchView(key, (v) => ({ ...v, submissions: v.submissions.map((entry) => entry.id === id && entry.phase === 'sending'
         ? { ...entry, phase: 'waiting' } : entry) }));
       await sent;

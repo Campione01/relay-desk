@@ -77,9 +77,9 @@ on to its sign-in. For a signed-out account, the one key that answers the last f
 text style) is written, and the sign-in that follows closes the session. If a key could not be written, the startup
 screen says why and the keys come back.
 
-What it recognizes: the rows of the sign-in screens of Claude Code 2.1.311 and 2.1.318, matched whole and spelled as
+What it recognizes: the rows of the sign-in screens of Claude Code 2.1.311 and 2.1.322, matched whole and spelled as
 those builds draw them, also behind the spinner or bullet that Claude Code puts in front of them. They are the
-login-method choice, the Console method question, a login method forced by settings (worded "Subscription Plan" in 2.1.311 and "Claude subscription" in 2.1.318 for
+login-method choice, the Console method question, a login method forced by settings (worded "Subscription Plan" in 2.1.311 and "Claude subscription" in 2.1.322 for
 claude.ai), "Opening browser to sign in...", "Creating API key for Claude Code..." (2.1.311 only), the paste-code prompt, the "Use the URL below to sign in" heading, the success
 row, the new-login notes of `/upgrade` and `/usage-credits`, the Remote Control device enrollment note, the Teleport
 "Log in to Claude" gate, the first-run sign-in that failed to start ("Press Enter to retry. (Esc to continue without
@@ -89,7 +89,9 @@ address screen ("Press Enter to connect · Esc for other login methods", or, whe
 no address), "Connecting to gateway...", the question "Trust gateway <host>?" with its "Yes, trust this gateway" row
 and certificate fingerprint, the device-code step ("Cloud gateway · sign in", "Waiting for sign-in to complete in your
 browser...") and the success rows. Relay Desk writes no key to a gateway screen it has recognized, so no gateway can be
-trusted from Relay Desk (see the limits below for a screen it has not seen yet). A row that reads only "Cloud gateway"
+trusted from Relay Desk (see the limits below for a screen it has not seen yet). In 2.1.322 the device-code step can
+also show a notice that the gateway sends ("Notice from <host>:" and its text); the notice is not matched itself, but
+it is drawn only between the device-code step's own rows. A row that reads only "Cloud gateway"
 counts only together with one of the gateway rows below it, so a conversation or heading named "Cloud gateway" does
 not close a session. Under that heading the captions count only whole: "Your organization's gateway URL (set by
 managed settings):" and "Gateway login is required by your organization's policy, but no gateway URL is configured.
@@ -153,7 +155,7 @@ What the guard cannot catch:
   - Claude Code draws a frame 16 ms after the last one (4 ms right after input). While its optional stdout queue holds
     more than 16 KiB (only with CLAUDE_CODE_NONBLOCKING_STDOUT, a write hook or a server flag) it holds a frame in
     250 ms steps, so a screen can pause longer than 150 ms in the middle of drawing; the three-second cap still applies.
-  - These timings were read in the code of 2.1.311 and 2.1.318 and tested with synthetic screens; they were not
+  - These timings were read in the code of 2.1.311 and 2.1.322 and tested with synthetic screens; they were not
     measured with a real Claude Code.
   - Mirrored dialogs: keys go to Claude Code in order, and the screen Relay Desk has is checked before each one, but a
     key does not wait for Claude Code's answer to the previous one. In the two admitted builds no dialog that Relay

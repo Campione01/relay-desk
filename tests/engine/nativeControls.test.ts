@@ -250,7 +250,7 @@ describe('one serialized native modal owner', () => {
     } finally { h.controller.close(); command.resolve({}); inspection.resolve({}); vi.useRealTimers(); }
   });
   it.each([
-    ['wrapped model footer', 'Select model\n> 1. Opus New Opus 5.5 Native description\nEnter to set as default -\ns to use this session only -\nEsc to cancel', 'model', undefined],
+    ['wrapped model footer', 'Select model\n> 1. Opus New Opus 5.5 · Native description\nEnter to set as default -\ns to use this session only -\nEsc to cancel', 'model', undefined],
     ['split irrelevant effort confirmation', 'Effort\n \u25b2\nlow medium high xhigh max\nEnter to\nconfirm - s for this session only - Esc to cancel', 'effort', false],
     ['missing irrelevant effort confirmation', 'Effort\n \u25b2\nlow medium high xhigh max\ns for this session only - Esc to cancel', 'effort', false],
     ['wrapped effort footer', 'Effort\n \u25b2\nlow medium high xhigh max\nEnter to confirm\ns for this session only -\nEsc to cancel', 'effort', true],
@@ -680,6 +680,23 @@ describe('native next/later queue ownership', () => {
     const bounded = new NativeSendQueue({ sessionId: 's', port: { request: vi.fn() }, capabilities: ['prompt.submit'], maxPending: 1 });
     bounded.observe({ sessionId: 's', sequence: 1, event: 'turn.start', data: { turnId: 't' } });
     bounded.submit('one', 'later'); expect(() => bounded.submit('two', 'later')).toThrow('full'); bounded.close();
+  });
+  it.each(['/E:/a/b/REPORT.md', ' /tmp/x.log', '\n/x.y', '/交接', '/ hi', '//c'])('refuses %j as a model prompt, which the native host refuses', async (text) => {
+    const h = queueSetup();
+    expect(() => h.queue.submit(text)).toThrow(NativeControlGate);
+    expect(() => h.queue.submit(text, 'later')).toThrow('Native control gate [prompt.slash]');
+    await tick();
+    expect(h.request).not.toHaveBeenCalled(); expect(h.error).not.toHaveBeenCalled();
+    expect(h.queue.snapshot().pending).toEqual([]);
+    // The gate guards prompt.submit only; an attachment delivery's text is refused earlier, in the session and the attachment check.
+    const deliver = vi.fn(async () => ({}));
+    await h.queue.submit(text, 'next', deliver).delivered;
+    expect(deliver).toHaveBeenCalledOnce(); expect(h.request).not.toHaveBeenCalled();
+    h.event('turn.start', { turnId: 'attached' }); h.event('turn.complete', { turnId: 'attached' }); await tick();
+    // Main rewrites a drive path before it reaches the queue.
+    await h.queue.submit('E:/a/b/REPORT.md').delivered;
+    expect(h.request.mock.calls).toEqual([['prompt.submit', { text: 'E:/a/b/REPORT.md', asUser: true }, expect.anything()]]);
+    h.queue.close();
   });
   it('keeps a next send pending when the bridge says the turn already ended, and sends it after the completion', async () => {
     const h = queueSetup();

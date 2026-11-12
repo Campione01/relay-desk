@@ -15,7 +15,7 @@ export const COMMAND_ANCHOR_SLACK_MS = 2_000;
 export const COMMAND_TAIL_BYTES = { first: 1024 * 1024, max: 8 * 1024 * 1024 };
 
 /**
- * CLI 2.1.308's slash command aliases, alias → command (claude.exe c9796ba2…); CLI 2.1.311 has the same table. Its
+ * CLI 2.1.308's slash command aliases, alias → command (claude.exe c9796ba2…); CLI 2.1.311 and 2.1.322 have the same table. Its
  * `<command-name>` row names the command an alias runs, and its command.list names no aliases.
  */
 const CLI_COMMAND_ALIASES: Readonly<Record<string, string>> = {

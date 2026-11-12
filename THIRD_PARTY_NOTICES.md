@@ -1,6 +1,6 @@
 # Third-party notices
 
-Generated from `package-lock.json` (relay-desk 0.2.5-public.1).
+Generated from `package-lock.json` (relay-desk 0.2.5-public.2).
 
 This repository contains source code only and includes none of the packages below. `npm ci` downloads them from the
 npm registry, each with its own license file; this list copies no license texts.

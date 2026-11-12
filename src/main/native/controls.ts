@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { BackgroundTask, WorkflowAgent } from '@shared/types';
+import { startsWithSlash } from '@shared/slashText';
 import type { NativeEvent, NativeRequestOptions } from './contract';
 import { NATIVE_CLI_BUILDS, nativeCliBuild, type NativeCliBuild } from './cliBuilds';
 import { detectNativePanel } from './panel';
@@ -825,6 +826,9 @@ export class NativeSendQueue {
     this.requireOpen('prompt.submit');
     if (!text.trim() && !deliver) throw new Error('Nothing to send.');
     if (/^\/[\w:-]+(?:\s|$)/.test(text.trimStart())) throw new NativeControlGate('prompt.command', 'slash commands need the native command dispatcher, not a model prompt.');
+    // The host rule guards prompt.submit only; a delivery's text was already refused by NativeInteractiveSession.send
+    // and validateNativeAttachmentSubmission when it starts with "/".
+    if (!deliver && startsWithSlash(text)) throw new NativeControlGate('prompt.slash', 'text that starts with "/" would run as a command; the native host refuses it as a model prompt.');
     if (priority !== 'next' && priority !== 'later') throw new Error('Invalid send priority.');
     if (this.pending.length + Number(Boolean(this.dispatching)) >= (this.options.maxPending ?? 64)) throw new Error('Native pending-send queue is full.');
     let resolve!: () => void, reject!: (error: Error) => void;

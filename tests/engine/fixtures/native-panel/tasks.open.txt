@@ -1,47 +1,47 @@
-          Claude Code v2.1.308
-           Opus 5.5 with xhigh effort · API Usage Billing
-           C:\RelayDeskNativePrototype\acceptance\native-EF1YeC\workspace
+> /reload-plugins
+  ⎿  Reloaded: 1 plugin · 0 skills · 6 agents · 0 hooks · 0 plugin MCP servers · 0 plugin LSP servers
 
+> /reload-skills
+  ⎿  Reloaded skills: 13 skills available (none added or removed).
 
-> /effort
-  ⎿  Cancelled
+> /rename
+  ⎿  Could not generate a name: no conversation context yet. Usage: /rename <name>
 
-> /model
-  ⎿  Kept model as Opus 5.5
+> /setup-bedrock
+
+> /setup-vertex
+
+> /scroll-speed
+  ⎿  Scroll speed unchanged
+
+> /pro-trial-expired
+
+> /recap
+  ⎿  /recap only runs when you ask for it yourself in this session: from the terminal, the Claude app or claude.ai/code, or over Remote
+     Control. A message relayed from Slack, Teams or a project thread, or sent by a routine or another program, can't request it.
+
+> /plan
+  ⎿  Enabled plan mode
 
 > /powerup
   ⎿  Power-ups closed
 
+> /export
+  ⎿  Export cancelled
 
+> /sandbox
+  ⎿  Error: Sandboxing is currently only supported on macOS, Linux, and WSL2.
 
+> /list-agents
+  ⎿  This session: workspace-0c [c685c8] (the name other sessions use to message it)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     No subagents, teammates or other Claude sessions — no other session is running on this machine right now; peer messaging itself is
+     available.
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ ◉ xhigh · /effort ▔
    Background
 
    No tasks currently running
 
-   ↑/↓ to select · Enter to view · Esc to close
+   > Earlier in this session (0)
+
+   ↑/↓ to select · Esc to close
